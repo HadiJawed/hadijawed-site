@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinanceTracker — Personal Finance Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --green: #1D9E75; --green-dark: #0F6E56; --green-light: #E1F5EE; --green-deep: #085041;
+    --blue: #378ADD; --blue-light: #E6F1FB; --blue-deep: #0C447C;
+    --red: #E24B4A; --red-light: #FCEBEB; --red-deep: #791F1F;
+    --amber: #EF9F27; --amber-light: #FAEEDA; --amber-deep: #633806;
+    --purple: #7F77DD; --purple-light: #EEEDFE; --purple-deep: #3C3489;
+    --pink-light: #FBEAF0; --pink: #D4537E; --pink-deep: #72243E;
+    --gray-50: #F8F8F6; --gray-100: #F1EFE8; --gray-200: #E2E0D8;
+    --gray-400: #888780; --gray-600: #5F5E5A; --gray-800: #2C2C2A;
+    --text: #1a1a18; --text-2: #5a5a56; --text-3: #8a8a86;
+    --border: rgba(0,0,0,0.1); --border-2: rgba(0,0,0,0.18);
+    --bg: #ffffff; --bg-2: #F8F8F6; --bg-3: #F1EFE8;
+    --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --green-light: #04342C; --green-deep: #9FE1CB; --green: #1D9E75;
+      --blue-light: #042C53; --blue-deep: #B5D4F4;
+      --red-light: #501313; --red-deep: #F7C1C1;
+      --amber-light: #412402; --amber-deep: #FAC775;
+      --purple-light: #26215C; --purple-deep: #CECBF6;
+      --pink-light: #4B1528; --pink-deep: #F4C0D1;
+      --gray-50: #1e1e1c; --gray-100: #252523; --gray-200: #2e2e2c;
+      --text: #f0f0ec; --text-2: #a0a09a; --text-3: #606060;
+      --border: rgba(255,255,255,0.1); --border-2: rgba(255,255,255,0.18);
+      --bg: #1a1a18; --bg-2: #222220; --bg-3: #2a2a28;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg-2); color: var(--text); font-size: 14px; }
+
+  /* TOP BAR */
+  .topbar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; position: sticky; top: 0; z-index: 100; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 32px; height: 32px; border-radius: 9px; background: var(--green); display: flex; align-items: center; justify-content: center; }
+  .logo-mark svg { width: 17px; height: 17px; }
+  .logo-name { font-size: 16px; font-weight: 600; color: var(--text); }
+  .logo-year { font-size: 12px; color: var(--text-2); background: var(--bg-3); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+  .saved-indicator { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.4s; }
+  .saved-indicator.show { opacity: 1; }
+
+  /* BUTTONS */
+  .btn { font-size: 12px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border-2); cursor: pointer; background: var(--bg); color: var(--text); font-family: var(--font); transition: background 0.15s; }
+  .btn:hover { background: var(--bg-3); }
+  .btn-green { background: var(--green); color: #fff; border-color: var(--green); font-weight: 600; }
+  .btn-green:hover { background: var(--green-dark); border-color: var(--green-dark); }
+  .btn-sm { font-size: 11px; padding: 4px 10px; }
+  .btn-icon { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 15px; padding: 2px 4px; }
+  .btn-icon:hover { color: var(--red); }
+  .add-btn { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--green); font-family: var(--font); padding: 5px 0 0; }
+  .add-btn:hover { color: var(--green-dark); }
+
+  /* NAV */
+  .nav { background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 0; overflow-x: auto; }
+  .nav-btn { font-size: 13px; padding: 12px 16px; border: none; background: none; cursor: pointer; color: var(--text-2); border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 6px; font-family: var(--font); transition: color 0.15s; }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+  .nav-icon { font-size: 15px; }
+
+  /* LAYOUT */
+  .content { padding: 20px 24px; max-width: 1100px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 10px; margin-bottom: 14px; }
+  @media(max-width:640px) { .grid-2,.grid-3 { grid-template-columns: 1fr; } .content { padding: 14px 16px; } }
+
+  /* CARDS */
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 14px; }
+  .card-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .card-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .card-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+  /* METRIC CARDS */
+  .metric { background: var(--bg-2); border-radius: var(--radius); padding: 12px 14px; }
+  .metric-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .metric-value { font-size: 20px; font-weight: 700; color: var(--text); }
+  .metric-value.pos { color: var(--green-dark); }
+  .metric-value.neg { color: var(--red-deep); }
+  .metric-value.warn { color: var(--amber-deep); }
+  .metric-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+
+  /* PROGRESS BAR */
+  .pbar-wrap { margin: 8px 0 4px; }
+  .pbar-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); margin-bottom: 5px; }
+  .pbar-outer { height: 8px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
+  .pbar-inner { height: 8px; border-radius: 4px; transition: width .5s ease; }
+
+  /* TABLES */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+  .tbl th { font-size: 10px; font-weight: 600; color: var(--text-3); text-align: left; padding: 5px 7px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .05em; }
+  .tbl th.r, .tbl td.r { text-align: right; }
+  .tbl td { padding: 6px 7px; border-bottom: 1px solid var(--border); color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl td input, .tbl td select { width: 100%; background: transparent; border: none; font-size: 12px; color: var(--text); font-family: var(--font); outline: none; }
+  .tbl td input:focus, .tbl td select:focus { background: var(--bg-2); border-radius: 4px; padding: 1px 4px; }
+  .tbl td input[type=number] { text-align: right; }
+  .tbl td select { cursor: pointer; }
+  .tbl tfoot td { font-weight: 700; font-size: 13px; border-top: 1px solid var(--border-2) !important; padding-top: 8px; }
+
+  /* BUDGET ROWS */
+  .budget-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .budget-row:last-child { border-bottom: none; }
+  .budget-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+  .budget-info { flex: 1; min-width: 0; }
+  .budget-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .budget-amounts { font-size: 10px; color: var(--text-3); margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+  .budget-amounts input { width: 55px; font-size: 10px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 4px; color: var(--text); font-family: var(--font); }
+  .budget-bar-wrap { width: 100px; flex-shrink: 0; }
+  .budget-bar-outer { height: 5px; background: var(--bg-3); border-radius: 3px; overflow: hidden; margin-bottom: 2px; }
+  .budget-bar-inner { height: 5px; border-radius: 3px; }
+  .budget-pct { font-size: 10px; font-weight: 600; text-align: right; }
+
+  /* GOAL RINGS */
+  .goals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .goal-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px; text-align: center; }
+  .goal-ring { position: relative; width: 64px; height: 64px; margin: 0 auto 8px; }
+  .goal-ring svg { width: 64px; height: 64px; }
+  .goal-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--text); }
+  .goal-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 1px; }
+  .goal-saved { font-size: 11px; color: var(--text-2); }
+  .goal-target { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+
+  /* NET WORTH */
+  .nw-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .nw-row:last-child { border-bottom: none; }
+  .nw-label { display: flex; align-items: center; gap: 7px; color: var(--text-2); }
+  .nw-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .nw-section-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; padding: 8px 0 3px; }
+
+  /* HEALTH */
+  .health-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .health-row:last-child { border-bottom: none; }
+  .health-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; }
+  .health-label { font-size: 12px; color: var(--text-2); width: 110px; flex-shrink: 0; }
+  .health-bar-outer { flex: 1; height: 6px; background: var(--bg-3); border-radius: 3px; overflow: hidden; }
+  .health-bar-inner { height: 6px; border-radius: 3px; }
+  .health-score { font-size: 12px; font-weight: 700; width: 28px; text-align: right; flex-shrink: 0; }
+
+  /* INSIGHTS */
+  .insight-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .insight-row:last-child { border-bottom: none; }
+  .insight-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+  .insight-text { font-size: 12px; color: var(--text); line-height: 1.55; }
+
+  /* SLIDERS */
+  .slider-row { display: flex; align-items: center; gap: 12px; margin: 6px 0; }
+  .slider-label { font-size: 12px; color: var(--text-2); width: 95px; flex-shrink: 0; }
+  .slider-row input[type=range] { flex: 1; accent-color: var(--green); }
+  .slider-val { font-size: 12px; font-weight: 600; color: var(--text); width: 58px; text-align: right; }
+
+  /* TAX */
+  .tax-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .tax-row:last-child { border-bottom: none; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+  .badge-green { background: var(--green-light); color: var(--green-deep); }
+  .badge-amber { background: var(--amber-light); color: var(--amber-deep); }
+  .badge-red { background: var(--red-light); color: var(--red-deep); }
+  .badge-blue { background: var(--blue-light); color: var(--blue-deep); }
+
+  /* LEGEND */
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--text-2); margin-bottom: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  /* NEW YEAR BANNER */
+  .ny-banner { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 18px; display: none; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .ny-banner.show { display: flex; }
+
+  /* EXPORT */
+  .export-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* YOY TABS */
+  .yr-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .yr-tab { font-size: 11px; padding: 3px 10px; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer; background: none; color: var(--text-2); font-family: var(--font); }
+  .yr-tab.active { background: var(--bg-3); color: var(--text); font-weight: 600; }
+
+  /* CHART TOGGLE */
+  .chart-toggle { display: flex; gap: 3px; }
+  .chart-toggle button { font-size: 11px; padding: 3px 9px; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer; background: none; color: var(--text-2); font-family: var(--font); }
+  .chart-toggle button.active { background: var(--bg-3); color: var(--text); font-weight: 600; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+
+  /* DONUT LEGEND */
+  .donut-legend { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 8px; width: 100%; justify-content: center; }
+  .donut-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-2); }
+  .donut-legend-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+  input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 17 17" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 13l4-4 3 3 6-7"/>
+      </svg>
+    </div>
+    <span class="logo-name">FinanceTracker</span>
+    <span class="logo-year" id="yr-badge">2025</span>
+  </div>
+  <div class="topbar-actions">
+    <span class="saved-indicator" id="save-ind">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 6l1.8 1.8 3-3.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Saved
+    </span>
+    <button class="btn btn-sm" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-sm" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-green btn-sm" onclick="showNY()">+ New year</button>
+  </div>
+</div>
+
+<div class="nav" id="main-nav">
+  <button class="nav-btn" onclick="nav('profile',this)"><span class="nav-icon">👤</span>Profile</button>
+  <button class="nav-btn active" onclick="nav('dash',this)"><span class="nav-icon">📊</span>Dashboard</button>
+  <button class="nav-btn" onclick="nav('transactions',this)"><span class="nav-icon">💳</span>Transactions</button>
+  <button class="nav-btn" onclick="nav('budget',this)"><span class="nav-icon">🎯</span>Budget</button>
+  <button class="nav-btn" onclick="nav('goals',this)"><span class="nav-icon">🏆</span>Goals</button>
+  <button class="nav-btn" onclick="nav('networth',this)"><span class="nav-icon">🏦</span>Net worth</button>
+  <button class="nav-btn" onclick="nav('tax',this)"><span class="nav-icon">🧾</span>Tax</button>
+  <button class="nav-btn" onclick="nav('analytics',this)"><span class="nav-icon">📈</span>Analytics</button>
+</div>
+
+<div class="content">
+
+  <!-- PROFILE -->
+  <div class="page" id="pg-profile">
+    <div class="card">
+      <div class="card-hd"><div class="card-icon" style="background:var(--green-light)">👤</div><div><div class="card-title">Your profile</div><div class="card-sub">This feeds your dashboard, tax estimator, and analytics automatically</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" id="profile-fields">
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Your name (optional)</div>
+          <input type="text" id="p-name" placeholder="e.g. Hadi" oninput="saveProfile()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-2);color:var(--text);font-size:13px;font-family:var(--font)">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Gross annual salary ($)</div>
+          <input type="number" id="p-salary" placeholder="e.g. 65000" min="0" oninput="saveProfile()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-2);color:var(--text);font-size:13px;font-family:var(--font)">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Pay frequency</div>
+          <select id="p-freq" onchange="saveProfile()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-2);color:var(--text);font-size:13px;font-family:var(--font)">
+            <option value="monthly">Monthly</option>
+            <option value="biweekly">Bi-weekly</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Province (for tax)</div>
+          <select id="p-province" onchange="saveProfile()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-2);color:var(--text);font-size:13px;font-family:var(--font)">
+            <option value="ON">Ontario</option>
+            <option value="BC">British Columbia</option>
+            <option value="AB">Alberta</option>
+            <option value="QC">Quebec</option>
+            <option value="NS">Nova Scotia</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="profile-summary-card" style="display:none">
+      <div class="card-hd"><div class="card-icon" style="background:var(--amber-light)">💡</div><div><div class="card-title">Income breakdown from your salary</div><div class="card-sub">Based on your gross annual salary</div></div></div>
+      <div class="grid-4" id="profile-metrics"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="pg-dash">
+    <div class="ny-banner" id="ny-banner">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)" id="ny-title">Start 2026?</div>
+        <div style="font-size:12px;color:var(--text-3)">Archive current year and open a fresh tracker. Previous data is preserved.</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="document.getElementById('ny-banner').classList.remove('show')">Cancel</button>
+        <button class="btn btn-green btn-sm" onclick="doNewYear()">Yes, start new year</button>
+      </div>
+    </div>
+    <div class="grid-4" id="dash-metrics"></div>
+    <div class="pbar-wrap">
+      <div class="pbar-labels"><span id="pbar-l">Savings rate</span><span id="pbar-r"></span></div>
+      <div class="pbar-outer"><div class="pbar-inner" id="dash-pbar" style="width:0%"></div></div>
+    </div>
+    <div style="margin-top:14px"></div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon" style="background:var(--green-light)">📅</div>
+        <div><div class="card-title">Monthly overview</div><div class="card-sub">Income vs expenses vs savings</div></div>
+        <div class="chart-toggle" style="margin-left:auto">
+          <button class="active" id="ct-bar" onclick="setMainChartType('bar',this)">Bar</button>
+          <button id="ct-line" onclick="setMainChartType('line',this)">Line</button>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Income</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Expenses</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--purple)"></span>Invested</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Cash savings</span>
+      </div>
+      <div style="position:relative;width:100%;height:200px"><canvas id="mainC" role="img" aria-label="Monthly income expenses and savings">Monthly overview</canvas></div>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="margin-bottom:0;display:flex;flex-direction:column;align-items:center">
+        <div class="card-hd" style="width:100%"><div class="card-icon" style="background:var(--amber-light)">🍩</div><div><div class="card-title">Spending breakdown</div></div></div>
+        <div style="position:relative;width:160px;height:160px;margin:0 auto 10px;flex-shrink:0">
+          <canvas id="donutC" role="img" aria-label="Spending donut chart by category" style="position:absolute;top:0;left:0;width:160px!important;height:160px!important">Spending by category</canvas>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+            <div style="font-size:10px;color:var(--text-3);text-align:center">Total</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);text-align:center" id="donut-total">$0</div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donut-leg"></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-hd"><div class="card-icon" style="background:var(--red-light)">💡</div><div><div class="card-title">Smart insights</div></div></div>
+        <div id="insights-el"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS -->
+  <div class="page" id="pg-transactions">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-icon" style="background:var(--green-light)">💰</div>
+          <div><div class="card-title">Income</div></div>
+          <button class="add-btn" style="margin-left:auto" onclick="addRow('inc')">+ Add row</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th style="width:38%">Source</th><th style="width:32%">Category</th><th style="width:22%" class="r">Amount ($)</th><th style="width:8%"></th></tr></thead>
+          <tbody id="inc-body"></tbody>
+          <tfoot><tr><td colspan="2">Total</td><td class="r" id="inc-total">$0</td><td></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-icon" style="background:var(--red-light)">💸</div>
+          <div><div class="card-title">Expenses</div></div>
+          <button class="add-btn" style="margin-left:auto" onclick="addRow('exp')">+ Add row</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th style="width:38%">Description</th><th style="width:32%">Category</th><th style="width:22%" class="r">Amount ($)</th><th style="width:8%"></th></tr></thead>
+          <tbody id="exp-body"></tbody>
+          <tfoot><tr><td colspan="2">Total</td><td class="r" id="exp-total">$0</td><td></td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon" style="background:var(--blue-light)">🔁</div>
+        <div><div class="card-title">Recurring transactions</div><div class="card-sub">Fixed commitments tracked automatically</div></div>
+        <button class="add-btn" style="margin-left:auto" onclick="addRec()">+ Add</button>
+      </div>
+      <table class="tbl">
+        <thead><tr><th style="width:30%">Name</th><th style="width:22%">Category</th><th style="width:18%">Frequency</th><th style="width:18%" class="r">Amount ($)</th><th style="width:12%" class="r">Annual</th></tr></thead>
+        <tbody id="rec-body"></tbody>
+        <tfoot><tr><td colspan="4">Annual total</td><td class="r" id="rec-annual">$0</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon" style="background:var(--purple-light)">📦</div>
+        <div><div class="card-title">Investments &amp; savings</div><div class="card-sub">Set a monthly target — see what you actually have left over</div></div>
+        <button class="add-btn" style="margin-left:auto" onclick="addInv()">+ Add</button>
+      </div>
+      <table class="tbl" id="inv-tbl">
+        <thead><tr>
+          <th style="width:30%">Account / purpose</th>
+          <th style="width:20%">Type</th>
+          <th style="width:16%" class="r">Target ($/mo)</th>
+          <th style="width:16%" class="r">Actual left</th>
+          <th style="width:12%" class="r">Variance</th>
+          <th style="width:6%"></th>
+        </tr></thead>
+        <tbody id="inv-body"></tbody>
+        <tfoot id="inv-foot"></tfoot>
+      </table>
+      <div id="inv-summary-bar" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="page" id="pg-budget">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon" style="background:var(--blue-light)">📊</div>
+        <div><div class="card-title">Monthly budget targets</div><div class="card-sub">Add your own categories — bars turn amber at 80%, red when over</div></div>
+        <button class="add-btn" style="margin-left:auto" onclick="addBudgetCat()">+ Add category</button>
+      </div>
+      <div id="budget-rows"></div>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <div class="page" id="pg-goals">
+    <div class="card">
+      <div class="card-hd"><div class="card-icon" style="background:var(--green-light)">🏆</div><div><div class="card-title">Savings goals</div><div class="card-sub">Track progress to each target</div></div></div>
+      <div class="goals-grid" id="goals-grid"></div>
+      <button class="add-btn" onclick="addGoal()">+ Add goal</button>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-icon" style="background:var(--purple-light)">📈</div><div><div class="card-title">Net worth projection</div><div class="card-sub">Compound growth calculator</div></div></div>
+      <div class="slider-row"><span class="slider-label">Monthly savings</span><input type="range" min="0" max="5000" step="50" value="1330" id="sl-s" oninput="upProj()"><span class="slider-val" id="sl-sv">$1,330</span></div>
+      <div class="slider-row"><span class="slider-label">Annual return</span><input type="range" min="0" max="15" step="1" value="6" id="sl-r" oninput="upProj()"><span class="slider-val" id="sl-rv">6%</span></div>
+      <div class="slider-row"><span class="slider-label">Years</span><input type="range" min="1" max="40" step="1" value="20" id="sl-y" oninput="upProj()"><span class="slider-val" id="sl-yv">20 yrs</span></div>
+      <div class="grid-3" style="margin-top:10px" id="proj-metrics"></div>
+      <div style="position:relative;width:100%;height:170px"><canvas id="projC" role="img" aria-label="Projection chart">Projection</canvas></div>
+    </div>
+  </div>
+
+  <!-- NET WORTH -->
+  <div class="page" id="pg-networth">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-hd"><div class="card-icon" style="background:var(--green-light)">📈</div><div><div class="card-title">Assets</div></div></div>
+        <div id="nw-assets"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-icon" style="background:var(--red-light)">📉</div><div><div class="card-title">Liabilities</div></div></div>
+        <div id="nw-liabs"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:15px;font-weight:600;color:var(--text)">Net worth</span>
+        <span style="font-size:24px;font-weight:700" id="nw-total-val">$0</span>
+      </div>
+      <div style="position:relative;width:100%;height:150px"><canvas id="nwC" role="img" aria-label="Net worth bar chart">Net worth</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-icon" style="background:var(--green-light)">💊</div><div><div class="card-title">Financial health score</div></div></div>
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:12px">
+        <div style="font-size:48px;font-weight:700;color:var(--green)" id="health-score-big">74</div>
+        <div><div style="font-size:13px;color:var(--text-2)">out of 100</div><span class="badge badge-green" style="margin-top:4px;display:inline-block">Good</span></div>
+      </div>
+      <div id="health-rows"></div>
+    </div>
+  </div>
+
+  <!-- TAX -->
+  <div class="page" id="pg-tax">
+    <div class="card">
+      <div class="card-hd"><div class="card-icon" style="background:var(--amber-light)">🧾</div><div><div class="card-title">Canadian federal tax estimator</div><div class="card-sub">Pulls from your Profile salary — or override below</div></div></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <label style="font-size:12px;color:var(--text-2);white-space:nowrap">Gross annual income ($)</label>
+        <input type="number" id="gross-in" value="0" min="0" step="1000" oninput="calcTax()" style="flex:1;font-size:14px;font-weight:600;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;color:var(--text);font-family:var(--font)">
+      </div>
+      <div id="tax-rows"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-2)">
+        <span style="font-size:14px;font-weight:600;color:var(--text)">Take-home pay</span>
+        <span style="font-size:22px;font-weight:700;color:var(--green-dark)" id="takehome">$0</span>
+      </div>
+      <div style="position:relative;width:100%;height:150px;margin-top:14px"><canvas id="taxC" role="img" aria-label="Tax breakdown bar chart">Tax breakdown</canvas></div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="page" id="pg-analytics">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon" style="background:var(--blue-light)">📅</div>
+        <div><div class="card-title">Year-over-year comparison</div><div class="card-sub">Populated when you complete a year and press "+ New year"</div></div>
+        <div class="yr-tabs" id="yr-tabs" style="margin-left:auto"></div>
+      </div>
+      <div id="yoy-empty" style="text-align:center;padding:32px;color:var(--text-3);font-size:13px;display:block">
+        No historical years yet. Use the tracker for a full year, then hit "+ New year" to archive it here.
+      </div>
+      <div class="grid-3" id="yoy-metrics" style="margin-bottom:10px"></div>
+      <div class="legend" id="yoy-leg-el"></div>
+      <div style="position:relative;width:100%;height:190px"><canvas id="yoyC" role="img" aria-label="Year over year grouped bar chart">Year over year</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-icon" style="background:var(--gray-100)">📤</div><div><div class="card-title">Export your data</div><div class="card-sub">All data is stored locally in your browser</div></div></div>
+      <div class="export-btns">
+        <button class="btn btn-green" onclick="exportCSV()">⬇ Download CSV</button>
+        <button class="btn" onclick="exportJSON()">{ } Download JSON</button>
+        <button class="btn" onclick="clearAllData()">🗑 Clear all data</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fm = n => '$' + Math.round(Math.abs(n)).toLocaleString();
+const fk = n => { const a = Math.abs(n); return (n<0?'-':'')+'$'+(a>=1000?(a/1000).toFixed(0)+'k':Math.round(a).toString()); };
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const FREQ = {weekly:52,biweekly:26,monthly:12,quarterly:4,annually:1};
+const INC_CATS = ['Salary','Freelance','Rental','Bonus','Side hustle','Other'];
+const INV_CATS = ['RRSP','TFSA','Emergency fund','Stocks / ETFs','Crypto','Other'];
+const EXP_CATS = ['Housing','Food','Transport','Health','Subscriptions','Entertainment','Shopping','Education','Travel','Clothing','Other'];
+const REC_CATS = ['Housing','Transport','Food','Health','Subscriptions','Investment','Insurance','Education','Other'];
+const SP_COLS = ['#1D9E75','#378ADD','#EF9F27','#E24B4A','#7F77DD','#D4537E','#D85A30','#888780'];
+const STORAGE_KEY = 'ft_data_v2';
+
+const DEFAULT_STATE = {
+  year: 2026,
+  profile: {name:'', salary: 0, payFreq: 'monthly'},
+  inc: [],
+  exp: [],
+  inv: [],
+  rec: [],
+  budgets: [],
+  goals: [],
+  nw: {assets:[],liabs:[]},
+  yoy: [],
+  activeYr: 2026,
+  tax: {gross: 0},
+  proj: {monthly:500,rate:6,years:20}
+};
+
+let S;
+function loadState() {
+  try { const raw = localStorage.getItem(STORAGE_KEY); S = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+  catch(e) { S = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+}
+let saveTimeout;
+function saveState() {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(S));
+    const ind = $('save-ind');
+    ind.classList.add('show');
+    setTimeout(() => ind.classList.remove('show'), 2000);
+  }, 400);
+}
+
+let charts = {};
+function mkChart(id, cfg) {
+  if(charts[id]) { charts[id].destroy(); delete charts[id]; }
+  const ctx = $(id).getContext('2d');
+  charts[id] = new Chart(ctx, cfg);
+  return charts[id];
+}
+
+function nav(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  $('pg-'+page).classList.add('active');
+  el.classList.add('active');
+  setTimeout(() => renderPage(page), 40);
+}
+
+function renderPage(page) {
+  if(page==='profile') renderProfile();
+  if(page==='dash') renderDash();
+  if(page==='transactions') { renderTxTable('inc'); renderTxTable('exp'); renderRecTable(); renderInvTable(); }
+  if(page==='budget') renderBudget();
+  if(page==='goals') { renderGoals(); upProj(); }
+  if(page==='networth') renderNetWorth();
+  if(page==='tax') { $('gross-in').value = S.profile?.salary||S.tax.gross||0; calcTax(); }
+  if(page==='analytics') renderYoY();
+}
+
+function totals() {
+  const inc = S.inc.reduce((s,r)=>s+r.a,0);
+  const exp = S.exp.reduce((s,r)=>s+r.a,0);
+  const inv = (S.inv||[]).reduce((s,r)=>s+r.a,0);
+  const available = inc - exp;
+  const cash = available - inv;
+  const rate = inc>0?Math.round(available/inc*100):0;
+  return {inc, exp, inv, cash, available, rate};
+}
+
+function renderDash() {
+  const {inc,exp,inv,cash,available,rate} = totals();
+  $('dash-metrics').innerHTML = [
+    {l:'Total income',v:fm(inc),cls:'pos',s:'Monthly'},
+    {l:'Total expenses',v:fm(exp),cls:'neg',s:'Outgoings this month'},
+    {l:'Investment targets',v:fm(inv),cls:'pos',s:'RRSP · TFSA · Emergency'},
+    {l:'Cash left over',v:fm(cash),cls:cash>=0?'pos':'neg',s:'After expenses & investments'},
+    {l:'Savings rate',v:rate+'%',cls:rate>=20?'pos':rate<0?'neg':'warn',s:rate>=20?'Above 20% target':'Aim for 20%+'}
+  ].map(m=>`<div class="metric"><div class="metric-label">${m.l}</div><div class="metric-value ${m.cls}">${m.v}</div><div class="metric-sub">${m.s}</div></div>`).join('');
+  const pct = inc>0?Math.min(Math.max(available/inc*100,0),100):0;
+  const bar = $('dash-pbar');
+  bar.style.width = pct+'%';
+  bar.style.background = available>=0?'var(--green)':'var(--red)';
+  $('pbar-l').textContent = 'Savings rate — '+Math.round(pct)+'% of income available after expenses';
+  $('pbar-r').textContent = fm(Math.max(available,0))+' available this month';
+
+  const nm = new Date().getMonth()+1;
+  const incD=[],expD=[],savD=[],invD=[];
+  for(let i=0;i<12;i++){
+    const f=i<nm?1:0;
+    const iv=Math.round(inc*f*(0.88+Math.random()*.24));
+    const ev=Math.round(exp*f*(0.88+Math.random()*.24));
+    const invv=Math.round(inv*f);
+    incD.push(iv); expD.push(ev); invD.push(invv); savD.push(iv-ev-invv);
+  }
+  const cType = $('ct-bar').classList.contains('active')?'bar':'line';
+  mkChart('mainC',{type:cType,data:{labels:MONTHS,datasets:[
+    {label:'Income',data:incD,backgroundColor:'rgba(29,158,117,0.75)',borderColor:'#1D9E75',borderWidth:cType==='line'?2:0,tension:0.4,fill:false,pointRadius:cType==='line'?3:0},
+    {label:'Expenses',data:expD,backgroundColor:'rgba(226,75,74,0.7)',borderColor:'#E24B4A',borderWidth:cType==='line'?2:0,tension:0.4,fill:false,pointRadius:cType==='line'?3:0},
+    {label:'Invested',data:invD,backgroundColor:'rgba(127,119,221,0.75)',borderColor:'#7F77DD',borderWidth:cType==='line'?2:0,tension:0.4,fill:false,pointRadius:cType==='line'?3:0},
+    {label:'Cash savings',data:savD,backgroundColor:'rgba(55,138,221,0.65)',borderColor:'#378ADD',borderWidth:cType==='line'?2:0,tension:0.4,fill:false,pointRadius:cType==='line'?3:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fm(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},autoSkip:false,maxRotation:0}},y:{grid:{color:'rgba(128,128,128,0.07)'},ticks:{font:{size:10},callback:v=>fk(v)}}}}});
+
+  const byCat={};
+  S.exp.forEach(e=>{byCat[e.c]=(byCat[e.c]||0)+e.a;});
+  const cats=Object.keys(byCat),vals=Object.values(byCat),tot=vals.reduce((s,v)=>s+v,0);
+  $('donut-total').textContent = fm(tot);
+  mkChart('donutC',{type:'doughnut',data:{labels:cats,datasets:[{data:vals,backgroundColor:SP_COLS.slice(0,cats.length),borderWidth:2,borderColor:'#fff'}]},options:{responsive:false,animation:false,cutout:'64%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.label+': '+fm(c.parsed)+' ('+Math.round(c.parsed/tot*100)+'%)'}}}}});
+  const cnv = $('donutC'); cnv.width=160; cnv.height=160;
+  $('donut-leg').innerHTML = cats.map((c,i)=>`<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${SP_COLS[i]}"></div>${c} ${Math.round(vals[i]/tot*100)}%</div>`).join('');
+  // reset canvas size explicitly after chart render
+  setTimeout(()=>{ const c=$('donutC'); if(c){c.style.width='160px';c.style.height='160px';} },10);
+
+  const {inc:ti,exp:te,inv:tinv,cash:tcash,available:tavail,rate:tr} = totals();
+  const over = S.budgets.filter(b=>b.spent>b.limit);
+  const items = [];
+  if(tr>=20) items.push({ic:'📈',bg:'var(--green-light)',t:`Savings rate is ${tr}% — above the 20% benchmark. Great work!`});
+  else items.push({ic:'⚠️',bg:'var(--amber-light)',t:`Savings rate is ${tr}%. Aim for 20% — try reducing variable expenses.`});
+  if(over.length) items.push({ic:'🚨',bg:'var(--red-light)',t:`Over budget in: ${over.map(b=>b.cat).join(', ')}.`});
+  else items.push({ic:'✅',bg:'var(--green-light)',t:'All spending categories are within budget this month.'});
+  const invCoverage = tinv>0?Math.round(Math.min(tavail,tinv)/tinv*100):100;
+  items.push({ic:'📦',bg:'var(--purple-light)',t:`Investment targets: ${fm(tinv)}/mo. You have ${fm(tavail)} available — targets are ${invCoverage}% funded.`});
+  const ef = S.goals.find(g=>g.n.toLowerCase().includes('emergency'));
+  if(ef) items.push({ic:'🎯',bg:'var(--blue-light)',t:`Emergency fund is ${Math.round(ef.s/ef.t*100)}% funded — ${fk(ef.t-ef.s)} to go.`});
+  $('insights-el').innerHTML = items.map(i=>`<div class="insight-row"><div class="insight-icon" style="background:${i.bg}">${i.ic}</div><div class="insight-text">${i.t}</div></div>`).join('');
+}
+
+function setMainChartType(t, el) {
+  $('ct-bar').classList.remove('active'); $('ct-line').classList.remove('active');
+  el.classList.add('active'); renderDash();
+}
+
+function renderTxTable(type) {
+  const isInc = type==='inc';
+  const data = isInc?S.inc:S.exp;
+  const cats = isInc?INC_CATS:EXP_CATS;
+  const key = isInc?'inc':'exp';
+  $(type+'-body').innerHTML = data.map((r,i)=>`<tr>
+    <td><input value="${r.d}" onchange="S.${key}[${i}].d=this.value;saveState();updateDash()"></td>
+    <td><select onchange="S.${key}[${i}].c=this.value;saveState()">${cats.map(c=>`<option${c===r.c?' selected':''}>${c}</option>`).join('')}</select></td>
+    <td class="r"><input type="number" value="${r.a}" min="0" onchange="S.${key}[${i}].a=parseFloat(this.value)||0;saveState();updateDash()"></td>
+    <td><button class="btn-icon" onclick="S.${key}.splice(${i},1);renderTxTable('${type}');saveState();updateDash()">×</button></td>
+  </tr>`).join('');
+  const tot = data.reduce((s,r)=>s+r.a,0);
+  $(type+'-total').textContent = fm(tot);
+}
+
+function addRow(type) {
+  const key = type==='inc'?'inc':'exp';
+  S[key].push({d:'',c:'Other',a:0});
+  renderTxTable(type); saveState();
+  $(type+'-body').lastElementChild.querySelector('input').focus();
+}
+
+function renderRecTable() {
+  $('rec-body').innerHTML = S.rec.map((r,i)=>`<tr>
+    <td><input value="${r.n}" onchange="S.rec[${i}].n=this.value;saveState()"></td>
+    <td><select onchange="S.rec[${i}].c=this.value;saveState()">${REC_CATS.map(c=>`<option${c===r.c?' selected':''}>${c}</option>`).join('')}</select></td>
+    <td><select onchange="S.rec[${i}].f=this.value;renderRecTable();saveState()">${Object.keys(FREQ).map(f=>`<option${f===r.f?' selected':''}>${f}</option>`).join('')}</select></td>
+    <td class="r"><input type="number" value="${r.a}" min="0" onchange="S.rec[${i}].a=parseFloat(this.value)||0;renderRecTable();saveState()"></td>
+    <td class="r" style="color:var(--text-3)">${fm(r.a*(FREQ[r.f]||12))}</td>
+  </tr>`).join('');
+  $('rec-annual').textContent = fm(S.rec.reduce((s,r)=>s+r.a*(FREQ[r.f]||12),0));
+}
+
+function addRec() {
+  S.rec.push({n:'',c:'Other',f:'monthly',a:0});
+  renderRecTable(); saveState();
+  $('rec-body').lastElementChild.querySelector('input').focus();
+}
+
+function renderBudget() {
+  if(!S.budgets || S.budgets.length===0) {
+    $('budget-rows').innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-3);font-size:13px">No budget categories yet. Click "+ Add category" to create one.</div>`;
+    return;
+  }
+  const ICONS = {Housing:'🏠',Food:'🥗',Transport:'🚌',Health:'❤️',Subscriptions:'📱',Entertainment:'🎬',Shopping:'🛍',Education:'📚',Travel:'✈️',Clothing:'👕',Other:'📦'};
+  const BG = {Housing:'#E6F1FB',Food:'#E1F5EE',Transport:'#FAEEDA',Health:'#FCEBEB',Subscriptions:'#EEEDFE',Entertainment:'#FBEAF0',Shopping:'#E1F5EE',Education:'#E6F1FB',Travel:'#FAEEDA',Clothing:'#FBEAF0',Other:'#F1EFE8'};
+  $('budget-rows').innerHTML = S.budgets.map((b,i)=>{
+    const p = b.limit>0?Math.round(b.spent/b.limit*100):0;
+    const bc = p>100?'var(--red)':p>80?'var(--amber)':'var(--green)';
+    const ic = ICONS[b.cat]||'📦'; const bg = BG[b.cat]||'#F1EFE8';
+    return `<div class="budget-row">
+      <div class="budget-icon" style="background:${bg}">${ic}</div>
+      <div class="budget-info">
+        <div style="display:flex;align-items:center;gap:8px">
+          <input value="${b.cat}" style="font-size:13px;font-weight:600;color:var(--text);background:transparent;border:none;outline:none;width:120px;font-family:var(--font)" onchange="S.budgets[${i}].cat=this.value;saveState()" placeholder="Category name">
+        </div>
+        <div class="budget-amounts">Spent: <input type="number" value="${b.spent}" min="0" style="width:60px" onchange="S.budgets[${i}].spent=parseFloat(this.value)||0;renderBudget();saveState()"> &nbsp;|&nbsp; Limit: <input type="number" value="${b.limit}" min="0" onchange="S.budgets[${i}].limit=parseFloat(this.value)||1;renderBudget();saveState()"></div>
+      </div>
+      <div class="budget-bar-wrap">
+        <div class="budget-bar-outer"><div class="budget-bar-inner" style="width:${Math.min(p,100)}%;background:${bc}"></div></div>
+        <div class="budget-pct" style="color:${bc}">${p}%${p>100?' over':''}</div>
+      </div>
+      <button class="btn-icon" style="flex-shrink:0" onclick="S.budgets.splice(${i},1);renderBudget();saveState()">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addBudgetCat() {
+  S.budgets.push({cat:'New category',spent:0,limit:100});
+  renderBudget(); saveState();
+  const inputs = $('budget-rows').querySelectorAll('input[placeholder="Category name"]');
+  if(inputs.length) inputs[inputs.length-1].focus();
+}
+
+function renderGoals() {
+  $('goals-grid').innerHTML = S.goals.map((g,i)=>{
+    const p = Math.round(g.s/g.t*100);
+    const r = 24; const circ = 2*Math.PI*r;
+    return `<div class="goal-card">
+      <div class="goal-ring">
+        <svg viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="${r}" fill="none" stroke="${g.tr}" stroke-width="5.5"/>
+          <circle cx="32" cy="32" r="${r}" fill="none" stroke="${g.c}" stroke-width="5.5"
+            stroke-dasharray="${circ*p/100} ${circ}" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+        </svg>
+        <div class="goal-pct">${p}%</div>
+      </div>
+      <div class="goal-name">${g.n}</div>
+      <div class="goal-saved">${fk(g.s)} saved</div>
+      <div class="goal-target">of ${fk(g.t)}</div>
+    </div>`;
+  }).join('');
+}
+
+function addGoal() {
+  const n = prompt('Goal name (e.g. New laptop, House deposit):');
+  if(!n) return;
+  const t = parseFloat(prompt('Target amount ($):')||'1000');
+  const saved = parseFloat(prompt('Already saved ($):')||'0');
+  const cs = ['#534AB7','#D4537E','#BA7517','#1D9E75'];
+  const trs = ['#CECBF6','#F4C0D1','#FAC775','#9FE1CB'];
+  const idx = S.goals.length%4;
+  S.goals.push({n,s:saved||0,t:t||1000,c:cs[idx],tr:trs[idx]});
+  renderGoals(); saveState();
+}
+
+let projChart;
+function upProj() {
+  const m = parseInt($('sl-s').value);
+  const rate = parseInt($('sl-r').value)/100/12;
+  const y = parseInt($('sl-y').value);
+  S.proj = {monthly:m,rate:parseInt($('sl-r').value),years:y};
+  $('sl-sv').textContent = fm(m);
+  $('sl-rv').textContent = $('sl-r').value+'%';
+  $('sl-yv').textContent = y+' yrs';
+  let fv=0; const cd=[],cl=[];
+  for(let i=1;i<=y*12;i++){fv=fv*(1+rate)+m;if(i%12===0){cd.push(Math.round(fv));cl.push('Yr'+(i/12));}}
+  const contrib = m*y*12; const gains = Math.round(fv)-contrib;
+  $('proj-metrics').innerHTML = [
+    {l:'Projected value',v:fk(Math.round(fv)),cls:'pos'},
+    {l:'Total contributed',v:fk(contrib),cls:''},
+    {l:'Investment gains',v:fk(gains),cls:'pos'}
+  ].map(m=>`<div class="metric"><div class="metric-label">${m.l}</div><div class="metric-value ${m.cls}">${m.v}</div></div>`).join('');
+  const contribLine = cl.map((_,i)=>Math.round(m*12*(i+1)));
+  if(charts['projC']) {
+    charts['projC'].data.labels=cl;
+    charts['projC'].data.datasets[0].data=cd;
+    charts['projC'].data.datasets[1].data=contribLine;
+    charts['projC'].update('none');
+  } else {
+    mkChart('projC',{type:'line',data:{labels:cl,datasets:[
+      {label:'Projected',data:cd,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.07)',borderWidth:2,fill:true,tension:0.4,pointRadius:0},
+      {label:'Contributed',data:contribLine,borderColor:'#378ADD',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,3],tension:0.4,pointRadius:0}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fk(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxTicksLimit:8}},y:{grid:{color:'rgba(128,128,128,0.07)'},ticks:{font:{size:10},callback:v=>fk(v)}}}}});
+  }
+  saveState();
+}
+
+function renderNetWorth() {
+  const {assets,liabs} = S.nw;
+  const totalAssets = assets.reduce((s,a)=>s+a.v,0);
+  const totalLiabs = liabs.reduce((s,l)=>s+l.v,0);
+  const net = totalAssets-totalLiabs;
+  $('nw-assets').innerHTML = assets.map(a=>`<div class="nw-row"><div class="nw-label"><div class="nw-dot" style="background:${a.c}"></div>${a.l}</div><div style="font-weight:600;color:var(--green-dark);font-size:13px">${fm(a.v)}</div></div>`).join('');
+  $('nw-liabs').innerHTML = liabs.map(l=>`<div class="nw-row"><div class="nw-label"><div class="nw-dot" style="background:${l.c}"></div>${l.l}</div><div style="font-weight:600;color:var(--red-deep);font-size:13px">${fm(l.v)}</div></div>`).join('');
+  const nwtv = $('nw-total-val');
+  nwtv.textContent = fm(net); nwtv.style.color = net>=0?'var(--green-dark)':'var(--red-deep)';
+  mkChart('nwC',{type:'bar',data:{labels:['Total assets','Total liabilities','Net worth'],datasets:[{data:[totalAssets,totalLiabs,net],backgroundColor:['#1D9E75','#E24B4A',net>=0?'#378ADD':'#E24B4A'],borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fm(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(128,128,128,0.07)'},ticks:{font:{size:10},callback:v=>fk(v)}}}}});
+  const healthItems=[{l:'Savings rate',ic:'💰',bg:'var(--green-light)',s:85,c:'#1D9E75'},{l:'Emergency fund',ic:'🛡',bg:'var(--blue-light)',s:53,c:'#378ADD'},{l:'Debt-to-income',ic:'📉',bg:'var(--red-light)',s:72,c:'#E24B4A'},{l:'Budget adherence',ic:'🎯',bg:'var(--amber-light)',s:78,c:'#EF9F27'},{l:'Investment rate',ic:'📈',bg:'var(--purple-light)',s:60,c:'#7F77DD'}];
+  const avg = Math.round(healthItems.reduce((s,h)=>s+h.s,0)/healthItems.length);
+  $('health-score-big').textContent = avg;
+  $('health-rows').innerHTML = healthItems.map(h=>`<div class="health-row"><div class="health-icon" style="background:${h.bg}">${h.ic}</div><div class="health-label">${h.l}</div><div class="health-bar-outer"><div class="health-bar-inner" style="width:${h.s}%;background:${h.c}"></div></div><div class="health-score" style="color:${h.c}">${h.s}</div></div>`).join('');
+}
+
+const TAX_BRACKETS=[{min:0,max:55867,r:.15},{min:55867,max:111733,r:.205},{min:111733,max:154906,r:.26},{min:154906,max:220000,r:.29},{min:220000,max:Infinity,r:.33}];
+function calcTax() {
+  const gross = parseFloat($('gross-in').value)||0;
+  S.tax.gross = gross; saveState();
+  let fed=0; const taxable=Math.max(gross-15705,0);
+  TAX_BRACKETS.forEach(b=>{if(taxable>b.min)fed+=Math.min(taxable,b.max)*b.r-b.min*b.r;});
+  const cpp=Math.min(Math.max(gross-3500,0)*0.0595,3799);
+  const ei=Math.min(gross*0.0166,1049);
+  const total=Math.round(fed+cpp+ei); const eff=gross>0?((total/gross)*100).toFixed(1):0;
+  const th=Math.round(gross-total);
+  $('takehome').textContent = fm(th);
+  $('tax-rows').innerHTML=[
+    {l:'Federal income tax',v:Math.round(fed)},
+    {l:'CPP contribution',v:Math.round(cpp)},
+    {l:'EI premium',v:Math.round(ei)},
+    {l:'Total deductions',v:total,badge:`<span class="badge badge-amber" style="margin-left:6px">${eff}% effective rate</span>`}
+  ].map(r=>`<div class="tax-row"><span style="color:var(--text-2)">${r.l}${r.badge||''}</span><span style="font-weight:600;color:var(--text)">${fm(r.v)}</span></div>`).join('');
+  mkChart('taxC',{type:'bar',data:{labels:['Take-home pay','Income tax','CPP & EI'],datasets:[{data:[th,Math.round(fed),Math.round(cpp+ei)],backgroundColor:['#1D9E75','#E24B4A','#EF9F27'],borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fm(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(128,128,128,0.07)'},ticks:{font:{size:10},callback:v=>fk(v)}}}}});
+}
+
+function renderYoY() {
+  const data = S.yoy||[];
+  if(data.length===0) {
+    $('yr-tabs').innerHTML='';
+    $('yoy-metrics').innerHTML='';
+    $('yoy-leg-el').innerHTML='';
+    if(charts['yoyC']){charts['yoyC'].destroy();delete charts['yoyC'];}
+    document.getElementById('yoy-empty').style.display='block';
+    return;
+  }
+  document.getElementById('yoy-empty').style.display='none';
+  $('yr-tabs').innerHTML = data.map(y=>`<button class="yr-tab${y.y===S.activeYr?' active':''}" onclick="S.activeYr=${y.y};saveState();renderYoY()">${y.y}</button>`).join('');
+  const yr = data.find(d=>d.y===S.activeYr)||data[data.length-1];
+  const prev = data[data.findIndex(d=>d.y===S.activeYr)-1];
+  const diff=(v,pv)=>prev?` <span style="font-size:10px;color:${v>=pv?'var(--green-dark)':'var(--red-deep)'}">${v>=pv?'▲':'▼'} ${fk(Math.abs(v-pv))}</span>`:'';
+  $('yoy-metrics').innerHTML=[{l:'Income',v:yr.i,pv:prev?.i},{l:'Expenses',v:yr.e,pv:prev?.e},{l:'Savings',v:yr.s,pv:prev?.s}].map(m=>`<div class="metric"><div class="metric-label">${m.l}</div><div class="metric-value">${fk(m.v)}${m.pv!==undefined?diff(m.v,m.pv):''}</div></div>`).join('');
+  $('yoy-leg-el').innerHTML=`<span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Income</span><span class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Expenses</span><span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Savings</span>`;
+  mkChart('yoyC',{type:'bar',data:{labels:data.map(d=>String(d.y)),datasets:[{label:'Income',data:data.map(d=>d.i),backgroundColor:'#1D9E75',borderRadius:4},{label:'Expenses',data:data.map(d=>d.e),backgroundColor:'#E24B4A',borderRadius:4},{label:'Savings',data:data.map(d=>d.s),backgroundColor:'#378ADD',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fm(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{font:{size:12},autoSkip:false,maxRotation:0}},y:{grid:{color:'rgba(128,128,128,0.07)'},ticks:{font:{size:10},callback:v=>fk(v)}}}}});
+}
+
+function renderInvTable() {
+  const data = S.inv || [];
+  const {inc, exp} = totals();
+  const available = Math.max(inc - exp, 0);
+  const totalTarget = data.reduce((s,r)=>s+r.a,0);
+
+  // Distribute available proportionally across rows
+  $('inv-body').innerHTML = data.map((r,i)=>{
+    const actual = totalTarget>0 ? Math.round(available * r.a / totalTarget) : 0;
+    const variance = actual - r.a;
+    const varColor = variance>=0 ? 'var(--green-dark)' : 'var(--red-deep)';
+    const varSign = variance>=0 ? '+' : '';
+    return `<tr>
+      <td><input value="${r.d}" onchange="S.inv[${i}].d=this.value;saveState()"></td>
+      <td><select onchange="S.inv[${i}].c=this.value;saveState()">${INV_CATS.map(c=>`<option${c===r.c?' selected':''}>${c}</option>`).join('')}</select></td>
+      <td class="r"><input type="number" value="${r.a}" min="0" onchange="S.inv[${i}].a=parseFloat(this.value)||0;saveState();renderInvTable();renderDash()"></td>
+      <td class="r" style="color:var(--text-2)">${fm(actual)}</td>
+      <td class="r" style="color:${varColor};font-weight:600">${varSign}${fm(Math.abs(variance))}</td>
+      <td><button class="btn-icon" onclick="S.inv.splice(${i},1);renderInvTable();saveState();renderDash()">×</button></td>
+    </tr>`;
+  }).join('');
+
+  // Footer
+  const totalActual = totalTarget>0 ? available : 0;
+  const totalVariance = totalActual - totalTarget;
+  const vColor = totalVariance>=0?'var(--green-dark)':'var(--red-deep)';
+  const vSign = totalVariance>=0?'+':'';
+  $('inv-foot').innerHTML = `
+    <tr style="font-weight:700;font-size:13px;border-top:1px solid var(--border-2)">
+      <td colspan="2" style="padding-top:8px">Monthly totals</td>
+      <td class="r" style="padding-top:8px">${fm(totalTarget)}</td>
+      <td class="r" style="padding-top:8px;color:var(--text-2)">${fm(totalActual)}</td>
+      <td class="r" style="padding-top:8px;color:${vColor}">${vSign}${fm(Math.abs(totalVariance))}</td>
+      <td style="padding-top:8px"></td>
+    </tr>
+    <tr style="font-size:11px;color:var(--text-3)">
+      <td colspan="2" style="padding-top:3px">Annual totals</td>
+      <td class="r" style="padding-top:3px">${fm(totalTarget*12)}</td>
+      <td class="r" style="padding-top:3px">${fm(totalActual*12)}</td>
+      <td class="r" style="padding-top:3px;color:${vColor}">${vSign}${fm(Math.abs(totalVariance*12))}/yr</td>
+      <td></td>
+    </tr>`;
+
+  // Summary bar below table
+  const pct = totalTarget>0 ? Math.min(Math.round(totalActual/totalTarget*100), 100) : 0;
+  const barColor = pct>=100?'var(--green)':pct>=80?'var(--amber)':'var(--red)';
+  $('inv-summary-bar').innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-bottom:5px">
+      <span>Target coverage — ${pct}% of targets funded by available income</span>
+      <span style="color:${barColor};font-weight:600">${fm(available)} available</span>
+    </div>
+    <div style="height:7px;background:var(--bg-3);border-radius:4px;overflow:hidden">
+      <div style="height:7px;border-radius:4px;background:${barColor};width:${pct}%;transition:width .4s"></div>
+    </div>
+    ${totalVariance<0?`<div style="font-size:11px;color:var(--red-deep);margin-top:5px">⚠ You're ${fm(Math.abs(totalVariance))}/mo short of your investment targets. Reduce expenses or lower a target.</div>`:''}
+    ${totalVariance>=0&&totalVariance>0?`<div style="font-size:11px;color:var(--green-dark);margin-top:5px">✓ You have ${fm(totalVariance)} extra after meeting all targets — consider boosting an account.</div>`:''}`;
+}
+
+function addInv() {
+  if(!S.inv) S.inv=[];
+  S.inv.push({d:'',c:'RRSP',a:0});
+  renderInvTable(); saveState();
+  $('inv-body').lastElementChild.querySelector('input').focus();
+}
+
+function saveProfile() {
+  if(!S.profile) S.profile = {name:'',salary:0,payFreq:'monthly',province:'ON'};
+  S.profile.name = $('p-name').value;
+  S.profile.salary = parseFloat($('p-salary').value)||0;
+  S.profile.payFreq = $('p-freq').value;
+  S.profile.province = $('p-province').value;
+  S.tax.gross = S.profile.salary;
+  saveState();
+  renderProfileSummary();
+}
+
+function renderProfile() {
+  if(!S.profile) S.profile = {name:'',salary:0,payFreq:'monthly',province:'ON'};
+  $('p-name').value = S.profile.name||'';
+  $('p-salary').value = S.profile.salary||'';
+  $('p-freq').value = S.profile.payFreq||'monthly';
+  $('p-province').value = S.profile.province||'ON';
+  renderProfileSummary();
+}
+
+function renderProfileSummary() {
+  const sal = S.profile?.salary||0;
+  if(!sal) { $('profile-summary-card').style.display='none'; return; }
+  $('profile-summary-card').style.display='block';
+  const monthly = Math.round(sal/12);
+  const biweekly = Math.round(sal/26);
+  const weekly = Math.round(sal/52);
+  // rough after-tax estimate
+  let fed=0; const taxable=Math.max(sal-15705,0);
+  [{min:0,max:55867,r:.15},{min:55867,max:111733,r:.205},{min:111733,max:154906,r:.26},{min:154906,max:220000,r:.29},{min:220000,max:Infinity,r:.33}].forEach(b=>{if(taxable>b.min)fed+=Math.min(taxable,b.max)*b.r-b.min*b.r;});
+  const cpp=Math.min(Math.max(sal-3500,0)*0.0595,3799);
+  const ei=Math.min(sal*0.0166,1049);
+  const afterTax=Math.round(sal-fed-cpp-ei);
+  $('profile-metrics').innerHTML=[
+    {l:'Gross annual',v:fm(sal),cls:'',s:'Before tax'},
+    {l:'Est. take-home/yr',v:fm(afterTax),cls:'pos',s:'After fed. tax, CPP & EI'},
+    {l:'Take-home / month',v:fm(Math.round(afterTax/12)),cls:'pos',s:'Net monthly pay'},
+    {l:'Take-home / paycheque',v:fm(S.profile.payFreq==='weekly'?Math.round(afterTax/52):S.profile.payFreq==='biweekly'?Math.round(afterTax/26):Math.round(afterTax/12)),cls:'pos',s:S.profile.payFreq+' pay'}
+  ].map(m=>`<div class="metric"><div class="metric-label">${m.l}</div><div class="metric-value ${m.cls}">${m.v}</div><div class="metric-sub">${m.s}</div></div>`).join('');
+}
+
+function updateDash() {
+  const {inc,exp,inv} = totals();
+  $('inc-total').textContent = fm(inc);
+  $('exp-total').textContent = fm(exp);
+}
+
+function showNY() {
+  $('ny-title').textContent = 'Start '+(S.year+1)+'?';
+  $('ny-banner').classList.add('show');
+  $('pg-dash').scrollIntoView({behavior:'smooth'});
+  nav('dash', document.querySelector('.nav-btn'));
+}
+
+function doNewYear() {
+  const prevInc = S.inc.reduce((s,r)=>s+r.a,0);
+  const prevExp = S.exp.reduce((s,r)=>s+r.a,0);
+  const prevInv = (S.inv||[]).reduce((s,r)=>s+r.a,0);
+  S.yoy.push({y:S.year,i:prevInc*12,e:prevExp*12,s:(prevInc-prevExp-prevInv)*12,inv:prevInv*12});
+  S.year++;
+  $('yr-badge').textContent = S.year;
+  S.inc = [{d:'',c:'Salary',a:0}];
+  S.exp = [{d:'',c:'Housing',a:0}];
+  S.inv = [];
+  S.budgets.forEach(b=>{b.spent=0;});
+  $('ny-banner').classList.remove('show');
+  saveState(); renderDash();
+}
+
+function exportCSV() {
+  let csv = 'Type,Description,Category,Amount,Annual\n';
+  S.inc.forEach(r=>csv+=`Income,"${r.d}","${r.c}",${r.a},${r.a*12}\n`);
+  S.exp.forEach(r=>csv+=`Expense,"${r.d}","${r.c}",${r.a},${r.a*12}\n`);
+  (S.inv||[]).forEach(r=>csv+=`Investment,"${r.d}","${r.c}",${r.a},${r.a*12}\n`);
+  S.rec.forEach(r=>csv+=`Recurring,"${r.n}","${r.c}",${r.a} (${r.f}),${Math.round(r.a*(FREQ[r.f]||12))}\n`);
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='finance-'+S.year+'.csv'; a.click();
+}
+
+function exportJSON() {
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(S,null,2));
+  a.download='finance-'+S.year+'.json'; a.click();
+}
+
+function clearAllData() {
+  if(confirm('Clear ALL data and reset to defaults? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+// INIT
+loadState();
+if(!S.profile) S.profile = {name:'',salary:0,payFreq:'monthly',province:'ON'};
+$('yr-badge').textContent = S.year||2026;
+$('sl-s').value = S.proj.monthly;
+$('sl-r').value = S.proj.rate;
+$('sl-y').value = S.proj.years;
+setTimeout(()=>{ renderPage('dash'); },60);
+</script>
+</body>
+</html>

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hadi Jawed — Tools for the Financially Ambitious</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --bg2: #ede8df;
+  --text: #2a2118;
+  --text2: #6b5e4e;
+  --text3: #a89880;
+  --border: rgba(42,33,24,0.1);
+  --border2: rgba(42,33,24,0.18);
+
+  --blue: #2454e8;
+  --blue-bg: #dce7ff;
+  --blue-border: #a8beff;
+
+  --yellow: #e8a800;
+  --yellow-bg: #fff3c2;
+  --yellow-border: #ffd95c;
+
+  --orange: #e84b1a;
+  --orange-bg: #ffe3d8;
+  --orange-border: #ffb89a;
+
+  --green: #1a9e6e;
+  --green-bg: #d4f5e6;
+  --green-border: #7ddbb8;
+
+  --r: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --font-head: 'Bricolage Grotesque', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --font-body: 'Bricolage Grotesque', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, rgba(42,33,24,0.18) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(245,240,232,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+.nav-logo span {
+  display: inline-block;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 6px;
+  padding: 1px 7px;
+  margin-left: 2px;
+  font-size: 16px;
+}
+.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text2);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 50px;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-links a:hover { background: var(--bg2); color: var(--text); }
+.nav-cta {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+  font-weight: 700 !important;
+  border-radius: 50px !important;
+}
+.nav-cta:hover { opacity: 0.85; background: var(--text) !important; }
+
+/* HERO */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 40px 64px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: start;
+}
+@media(max-width:760px){ .hero { grid-template-columns: 1fr; padding: 48px 20px 40px; } }
+
+.hero-left {}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--yellow-bg);
+  border: 1.5px solid var(--yellow-border);
+  border-radius: 50px;
+  padding: 5px 14px 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero-eyebrow-dot {
+  width: 8px; height: 8px;
+  background: var(--yellow);
+  border-radius: 50%;
+  display: inline-block;
+}
+.hero-name {
+  font-family: var(--font-head);
+  font-size: clamp(56px, 8vw, 100px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -3px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.hero-name .first { display: block; }
+.hero-name .last {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 2.5px var(--text);
+}
+.hero-tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-style: italic;
+  color: var(--text2);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 26px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(36,84,232,0.28); }
+
+.btn-coffee {
+  background: var(--yellow-bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 22px;
+  border-radius: 50px;
+  border: 1.5px solid var(--yellow-border);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: transform 0.15s;
+}
+.btn-coffee:hover { transform: translateY(-2px); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 22px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border2);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.btn-outline:hover { border-color: var(--text2); background: var(--bg2); }
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+.hero-stat-card {
+  border-radius: var(--r-lg);
+  padding: 18px 22px;
+  min-width: 180px;
+  border: 1.5px solid;
+}
+.hsc-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; opacity: 0.7; }
+.hsc-value { font-family: var(--font-head); font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+.hsc-sub { font-size: 12px; margin-top: 2px; opacity: 0.6; }
+
+/* DIVIDER */
+.divider {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+  border-top: 1.5px solid var(--border2);
+}
+
+/* PRODUCTS */
+.products {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 72px 40px;
+}
+@media(max-width:640px){ .products { padding: 48px 20px; } }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-head);
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.section-sub {
+  font-size: 16px;
+  color: var(--text2);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+@media(max-width:760px){ .products-grid { grid-template-columns: 1fr; } }
+
+.product-card {
+  border-radius: var(--r-xl);
+  padding: 36px;
+  border: 1.5px solid;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+.product-card:hover { transform: translateY(-3px); }
+
+.product-card.blue-card { background: var(--blue-bg); border-color: var(--blue-border); }
+.product-card.yellow-card { background: var(--yellow-bg); border-color: var(--yellow-border); }
+.product-card.orange-card { background: var(--orange-bg); border-color: var(--orange-border); }
+.product-card.white-card { background: #fff; border-color: var(--border2); }
+
+.product-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--text2);
+  margin-bottom: 20px;
+}
+.product-icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 16px;
+}
+.product-title {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.product-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.product-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+.pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--text);
+}
+.product-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 22px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+.product-btn:hover { transform: translateY(-1px); }
+.pb-blue { background: var(--blue); color: #fff; }
+.pb-blue:hover { box-shadow: 0 6px 24px rgba(36,84,232,0.25); }
+.pb-dark { background: var(--text); color: var(--bg); }
+.pb-dark:hover { box-shadow: 0 6px 24px rgba(42,33,24,0.2); }
+.pb-ghost { background: rgba(255,255,255,0.5); color: var(--text2); border: 1.5px solid rgba(0,0,0,0.1); }
+
+/* MINI DASHBOARD PREVIEW */
+.dash-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.dp-card {
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.dp-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 3px; }
+.dp-val { font-family: var(--font-head); font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+
+/* SIDE CARDS STACK */
+.side-cards { display: flex; flex-direction: column; gap: 16px; }
+
+/* ABOUT */
+.about {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+}
+@media(max-width:640px){ .about { padding: 0 20px 60px; } }
+
+.about-card {
+  background: var(--orange-bg);
+  border: 1.5px solid var(--orange-border);
+  border-radius: var(--r-xl);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media(max-width:700px){ .about-card { grid-template-columns: 1fr; padding: 32px; } }
+
+.about-avatar {
+  width: 110px; height: 110px;
+  border-radius: var(--r-lg);
+  background: var(--orange-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.6);
+}
+.about-name {
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.about-role { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.07em; }
+.about-bio { font-size: 15px; color: var(--text2); line-height: 1.75; margin-bottom: 20px; max-width: 560px; }
+.about-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.about-tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 13px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--text);
+}
+
+/* EMAIL STRIP */
+.email-strip {
+  background: var(--blue);
+  padding: 64px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.email-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.email-strip-inner { position: relative; z-index: 1; }
+.email-strip-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+.email-strip-title {
+  font-family: var(--font-head);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.email-strip-sub { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+.email-form {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.email-form input {
+  flex: 1;
+  min-width: 210px;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 50px;
+  padding: 13px 20px;
+  font-size: 14px;
+  color: #fff;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.email-form input::placeholder { color: rgba(255,255,255,0.5); }
+.email-form input:focus { border-color: rgba(255,255,255,0.6); }
+.email-form button {
+  background: #fff;
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 24px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  transition: transform 0.15s;
+}
+.email-form button:hover { transform: scale(1.03); }
+#nl-success { color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; margin-top: 16px; display: none; }
+
+/* FOOTER */
+footer {
+  background: var(--bg2);
+  border-top: 1.5px solid var(--border2);
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.footer-logo { font-family: var(--font-head); font-size: 17px; font-weight: 800; color: var(--text); text-decoration: none; }
+.footer-logo span { background: var(--blue); color: #fff; border-radius: 5px; padding: 1px 6px; margin-left: 2px; font-size: 13px; }
+.footer-copy { font-size: 12px; color: var(--text3); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text3); text-decoration: none; font-weight: 500; }
+.footer-links a:hover { color: var(--text2); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(42,33,24,0.5);
+  backdrop-filter: blur(10px);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg);
+  background-image: radial-gradient(circle, rgba(42,33,24,0.15) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r-xl);
+  padding: 44px;
+  max-width: 460px;
+  width: 100%;
+  position: relative;
+  animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes modalIn { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.modal-close:hover { background: var(--border2); }
+.modal-accent-bar {
+  height: 5px;
+  border-radius: 50px;
+  margin-bottom: 28px;
+}
+.modal-icon { font-size: 38px; display: block; margin-bottom: 14px; }
+.modal-title { font-family: var(--font-head); font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; color: var(--text); }
+.modal-sub { font-size: 14px; color: var(--text2); margin-bottom: 26px; line-height: 1.65; }
+.modal-form { display: flex; flex-direction: column; gap: 10px; }
+.modal-form input {
+  background: #fff;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  padding: 13px 16px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.modal-form input:focus { border-color: var(--blue); }
+.modal-form input::placeholder { color: var(--text3); }
+.modal-submit {
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 15px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-top: 4px;
+}
+.modal-submit:hover { transform: scale(1.02); box-shadow: 0 6px 24px rgba(36,84,232,0.25); }
+.modal-note { font-size: 11px; color: var(--text3); text-align: center; margin-top: 10px; }
+.modal-divider { border: none; border-top: 1.5px solid var(--border); margin: 20px 0; }
+.modal-coffee-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.modal-coffee-row span { font-size: 13px; color: var(--text2); }
+.coffee-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--yellow-bg); color: var(--text);
+  font-weight: 700; font-size: 13px;
+  padding: 8px 16px; border-radius: 50px;
+  border: 1.5px solid var(--yellow-border);
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-body);
+  transition: transform 0.15s;
+  white-space: nowrap;
+}
+.coffee-btn:hover { transform: scale(1.04); }
+
+/* SUCCESS */
+.modal-success { display: none; text-align: center; }
+.modal-success.show { display: block; }
+.success-icon { font-size: 54px; display: block; margin-bottom: 14px; animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes pop { from { transform: scale(0.4); } to { transform: none; } }
+.success-title { font-family: var(--font-head); font-size: 24px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+.success-sub { font-size: 14px; color: var(--text2); margin-bottom: 24px; line-height: 1.6; }
+.download-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: #fff;
+  font-weight: 700; font-size: 15px;
+  padding: 14px 28px; border-radius: 50px;
+  text-decoration: none; font-family: var(--font-body);
+  transition: transform 0.15s;
+}
+.download-btn:hover { transform: scale(1.03); }
+
+/* ANIMATIONS */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+
+/* LATEST VIDEO CARD */
+.latest-video-card {
+  background: #fff;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r-xl);
+  padding: 20px;
+  width: 320px;
+  flex-shrink: 0;
+}
+@media(max-width:760px){ .latest-video-card { width: 100%; } }
+.lv-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--orange);
+  margin-bottom: 14px;
+}
+.lv-dot {
+  width: 8px; height: 8px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.75); }
+}
+.lv-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background: var(--bg2);
+  margin-bottom: 14px;
+}
+.lv-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+.lv-thumb:hover img { transform: scale(1.04); }
+.lv-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.22);
+  transition: background 0.2s;
+}
+.lv-thumb:hover .lv-play { background: rgba(0,0,0,0.38); }
+.lv-play-btn {
+  width: 52px; height: 52px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.lv-thumb:hover .lv-play-btn { transform: scale(1.1); }
+.lv-iframe-wrap {
+  position: absolute;
+  inset: 0;
+}
+.lv-meta {}
+.lv-title {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.lv-channel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: none;
+}
+.lv-channel:hover { text-decoration: underline; }
+
+/* YOUTUBE SECTION */
+.youtube-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+}
+@media(max-width:640px){ .youtube-section { padding: 0 20px 60px; } }
+
+.yt-card {
+  background: var(--yellow-bg);
+  border: 1.5px solid var(--yellow-border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+.yt-card-top {
+  padding: 40px 40px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: start;
+}
+@media(max-width:640px){ .yt-card-top { grid-template-columns: 1fr; padding: 28px; } }
+
+.yt-channel-info {}
+.yt-channel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 50px;
+  padding: 5px 14px 5px 10px;
+  margin-bottom: 16px;
+}
+.yt-logo {
+  width: 20px; height: 20px;
+  background: #ff0000;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+}
+.yt-logo svg { width: 11px; height: 11px; }
+.yt-badge-text { font-size: 12px; font-weight: 700; color: var(--text2); }
+.yt-channel-name {
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.yt-channel-desc {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.65;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+.yt-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.yt-stat {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: var(--r);
+  padding: 12px 18px;
+  text-align: center;
+}
+.yt-stat-num {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  display: block;
+}
+.yt-stat-label { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
+.yt-subscribe-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ff0000;
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 24px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.yt-subscribe-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.yt-featured-video {
+  background: rgba(255,255,255,0.5);
+  border-top: 1.5px solid var(--yellow-border);
+  padding: 28px 40px 36px;
+}
+@media(max-width:640px){ .yt-featured-video { padding: 24px 28px 28px; } }
+.yt-featured-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 16px; }
+.yt-video-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+@media(max-width:640px){ .yt-video-grid { grid-template-columns: 1fr; } }
+.yt-embed-wrap {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--bg2);
+  position: relative;
+  cursor: pointer;
+}
+.yt-embed-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+.yt-embed-wrap:hover img { transform: scale(1.03); }
+.yt-embed-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.2);
+  transition: background 0.2s;
+}
+.yt-embed-wrap:hover .yt-embed-overlay { background: rgba(0,0,0,0.35); }
+.yt-play-btn {
+  width: 58px; height: 58px;
+  background: #ff0000;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+.yt-embed-wrap:hover .yt-play-btn { transform: scale(1.1); }
+.yt-iframe-container { display: none; position: absolute; inset: 0; }
+.yt-iframe-container iframe { width: 100%; height: 100%; border: none; }
+.yt-video-info { padding-top: 4px; }
+.yt-video-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,0,0,0.1);
+  border: 1px solid rgba(255,0,0,0.15);
+  border-radius: 50px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #cc0000;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.yt-video-title {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.yt-video-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.yt-watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 22px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+.yt-watch-btn:hover { transform: translateY(-1px); }
+.yt-update-note {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Hadi<span>.</span></a>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#about">About</a>
+    <a href="#newsletter">Newsletter</a>
+    <a href="https://buymeacoffee.com/hadijawed" target="_blank" class="nav-cta">☕ Coffee</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Free tools · Finance · 2026</div>
+    <h1 class="hero-name">
+      <span class="first">Hadi</span>
+      <span class="last">Jawed.</span>
+    </h1>
+    <p class="hero-tagline">I build free financial tools<br>for anyone serious about their money.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary">See the tools →</a>
+      <a href="https://buymeacoffee.com/hadijawed" target="_blank" class="btn-coffee">☕ Buy me a coffee</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="latest-video-card">
+      <div class="lv-label">
+        <span class="lv-dot"></span>Latest video
+      </div>
+      <div class="lv-thumb" id="lv-thumb" onclick="playVideo()">
+        <img id="lv-img" src="https://img.youtube.com/vi/LATEST_VIDEO_ID/maxresdefault.jpg" alt="Latest video thumbnail" onerror="this.src='https://img.youtube.com/vi/LATEST_VIDEO_ID/hqdefault.jpg'">
+        <div class="lv-play">
+          <div class="lv-play-btn">
+            <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="lv-iframe-wrap" id="lv-iframe-wrap" style="display:none">
+          <iframe id="lv-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="lv-meta">
+        <div class="lv-title" id="lv-title">How I Budget My Money in 2026</div>
+        <a href="https://www.youtube.com/@HadiJawedd" target="_blank" class="lv-channel">@HadiJawedd →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PRODUCTS -->
+<div class="products" id="products">
+  <div class="section-label">Products</div>
+  <h2 class="section-title">Tools that actually<br>do the work for you</h2>
+  <p class="section-sub">No paywalls, no subscriptions. Download once, use forever.</p>
+
+  <div class="products-grid">
+
+    <!-- MAIN PRODUCT — BLUE -->
+    <div class="product-card blue-card reveal">
+      <span class="product-tag">✦ Free download</span>
+      <span class="product-icon">📊</span>
+      <div class="product-title">Personal Finance Tracker</div>
+      <p class="product-desc">A complete offline dashboard for tracking income, expenses, investments, savings goals, net worth, and tax — all in one beautiful file. Built for Canadians.</p>
+      <div class="dash-preview">
+        <div class="dp-card">
+          <div class="dp-label">Income</div>
+          <div class="dp-val" style="color:var(--green)">$5,800</div>
+        </div>
+        <div class="dp-card">
+          <div class="dp-label">Expenses</div>
+          <div class="dp-val" style="color:var(--orange)">$2,067</div>
+        </div>
+        <div class="dp-card">
+          <div class="dp-label">Invested</div>
+          <div class="dp-val" style="color:var(--blue)">$600</div>
+        </div>
+        <div class="dp-card">
+          <div class="dp-label">Savings rate</div>
+          <div class="dp-val" style="color:var(--yellow)">56%</div>
+        </div>
+      </div>
+      <div class="product-pills">
+        <span class="pill">Income & expenses</span>
+        <span class="pill">RRSP · TFSA tracking</span>
+        <span class="pill">Tax estimator</span>
+        <span class="pill">Savings goals</span>
+        <span class="pill">Net worth</span>
+        <span class="pill">Works offline</span>
+      </div>
+      <button class="product-btn pb-blue" onclick="openModal('tracker')">Get free access →</button>
+    </div>
+
+    <!-- SIDE CARDS -->
+    <div class="side-cards">
+      <div class="product-card yellow-card reveal reveal-delay-1">
+        <span class="product-tag">Coming soon</span>
+        <span class="product-icon">📈</span>
+        <div class="product-title">Portfolio Tracker</div>
+        <p class="product-desc">Track TFSA, RRSP, and non-registered accounts. Allocation, returns, rebalancing.</p>
+        <button class="product-btn pb-dark" onclick="openModal('notify')">Notify me →</button>
+      </div>
+      <div class="product-card orange-card reveal reveal-delay-2">
+        <span class="product-tag">In the pipeline</span>
+        <span class="product-icon">🎯</span>
+        <div class="product-title">Debt Payoff Planner</div>
+        <p class="product-desc">Avalanche vs snowball, payoff timelines, and interest saved for student loans and credit cards.</p>
+        <button class="product-btn pb-dark" onclick="openModal('notify')">Notify me →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about" id="about">
+  <div class="about-card reveal">
+    <div class="about-avatar">👋</div>
+    <div>
+      <div class="section-label">About me</div>
+      <div class="about-name">Hadi Jawed</div>
+      <div class="about-role">Finance grad · CFA candidate · Tool builder</div>
+      <p class="about-bio">I'm a Finance graduate from Wilfrid Laurier University, currently pursuing the CFA designation and building toward a career in corporate development and M&A. I build free tools because I believe everyone — from first paycheque to financial freedom — deserves clarity about their money, without paying for expensive software.</p>
+      <div class="about-tags">
+        <span class="about-tag">📍 Toronto, ON</span>
+        <span class="about-tag">🎓 Laurier Finance</span>
+        <span class="about-tag">📊 CFA Level I</span>
+        <span class="about-tag">💼 Corp Dev track</span>
+        <span class="about-tag">⚽ Attacking midfielder</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- YOUTUBE SECTION -->
+<div class="youtube-section" id="youtube">
+  <div class="yt-card reveal">
+    <div class="yt-card-top">
+      <div class="yt-channel-info">
+        <div class="yt-channel-badge">
+          <div class="yt-logo">
+            <svg viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+          </div>
+          <span class="yt-badge-text">YouTube Channel</span>
+        </div>
+        <div class="yt-channel-name">Hadi Jawed</div>
+        <p class="yt-channel-desc">I help you invest & budget your money — practical finance content for Canadians at every stage. From first job to FIRE, no fluff, just what works.</p>
+        <div class="yt-stats">
+          <div class="yt-stat">
+            <span class="yt-stat-num" id="yt-subs">—</span>
+            <span class="yt-stat-label">Subscribers</span>
+          </div>
+          <div class="yt-stat">
+            <span class="yt-stat-num" id="yt-videos">—</span>
+            <span class="yt-stat-label">Videos</span>
+          </div>
+          <div class="yt-stat">
+            <span class="yt-stat-num">Free</span>
+            <span class="yt-stat-label">Always</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@HadiJawedd?sub_confirmation=1" target="_blank" class="yt-subscribe-btn">
+          <svg viewBox="0 0 24 24" fill="white" width="16" height="16"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+          Subscribe on YouTube
+        </a>
+      </div>
+      <div style="background:rgba(255,255,255,0.5);border:1.5px solid var(--yellow-border);border-radius:var(--r-lg);padding:20px;text-align:center;min-width:160px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px">Topics covered</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;font-weight:600;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.07);border-radius:50px;padding:5px 12px;color:var(--text)">💰 Budgeting</span>
+          <span style="font-size:12px;font-weight:600;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.07);border-radius:50px;padding:5px 12px;color:var(--text)">📈 Investing</span>
+          <span style="font-size:12px;font-weight:600;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.07);border-radius:50px;padding:5px 12px;color:var(--text)">🏦 RRSP · TFSA</span>
+          <span style="font-size:12px;font-weight:600;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.07);border-radius:50px;padding:5px 12px;color:var(--text)">🎯 Financial goals</span>
+          <span style="font-size:12px;font-weight:600;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.07);border-radius:50px;padding:5px 12px;color:var(--text)">🇨🇦 Canadian focus</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="yt-featured-video">
+      <div class="yt-featured-label">▶ Latest video</div>
+      <div class="yt-video-grid">
+        <div class="yt-embed-wrap" id="yt-thumb-wrap" onclick="playYTVideo()">
+          <img id="yt-thumb-img" src="https://img.youtube.com/vi/LATEST_VIDEO_ID/maxresdefault.jpg" alt="Latest video" onerror="this.src='https://img.youtube.com/vi/LATEST_VIDEO_ID/hqdefault.jpg'">
+          <div class="yt-embed-overlay">
+            <div class="yt-play-btn">
+              <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="yt-iframe-container" id="yt-iframe-container">
+            <iframe id="yt-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="yt-video-info">
+          <div class="yt-video-badge">
+            <span style="width:6px;height:6px;background:#cc0000;border-radius:50%;display:inline-block"></span>
+            Latest upload
+          </div>
+          <div class="yt-video-title" id="yt-video-title">How I Budget My Money in 2026</div>
+          <p class="yt-video-desc" id="yt-video-desc">A full walkthrough of the exact system I use to track income, expenses, and investments every month — using the free finance tracker on this site.</p>
+          <a href="https://www.youtube.com/watch?v=LATEST_VIDEO_ID" target="_blank" class="yt-watch-btn" id="yt-watch-link">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+            Watch on YouTube
+          </a>
+          <div class="yt-update-note">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+            Update the video ID in the HTML when you post a new video
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL STRIP -->
+<div class="email-strip" id="newsletter">
+  <div class="email-strip-inner">
+    <div class="email-strip-label">Newsletter</div>
+    <h2 class="email-strip-title">Stay in the loop</h2>
+    <p class="email-strip-sub">New tools and finance tips — straight to your inbox. No spam, ever.</p>
+    <form class="email-form" id="nl-form" onsubmit="submitNewsletter(event)">
+      <input type="email" placeholder="your@email.com" id="nl-email" required>
+      <button type="submit">Subscribe free →</button>
+    </form>
+    <div id="nl-success">✓ You're in! Welcome to the list.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Hadi<span>.</span></a>
+  <span class="footer-copy">© 2026 Hadi Jawed. Built with care.</span>
+  <div class="footer-links">
+    <a href="#products">Products</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#about">About</a>
+    <a href="https://buymeacoffee.com/hadijawed" target="_blank">☕ Coffee</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div id="modal-form-state">
+      <div class="modal-accent-bar" id="modal-accent-bar" style="background:var(--blue)"></div>
+      <span class="modal-icon" id="modal-icon">📊</span>
+      <div class="modal-title" id="modal-title">Get the Finance Tracker</div>
+      <p class="modal-sub" id="modal-sub">Enter your name and email — your download starts instantly. No account needed, ever.</p>
+      <form class="modal-form" onsubmit="submitModal(event)">
+        <input type="text" placeholder="Your first name" id="modal-name" required>
+        <input type="email" placeholder="Your email address" id="modal-email" required>
+        <button type="submit" class="modal-submit" id="modal-btn">Get free access →</button>
+      </form>
+      <p class="modal-note">No spam. Unsubscribe anytime. Your data is private.</p>
+      <hr class="modal-divider">
+      <div class="modal-coffee-row">
+        <span>Enjoying the tools? Support the work:</span>
+        <a href="https://buymeacoffee.com/hadijawed" target="_blank" class="coffee-btn">☕ Buy me a coffee</a>
+      </div>
+    </div>
+
+    <div class="modal-success" id="modal-success-state">
+      <span class="success-icon">🎉</span>
+      <div class="success-title" id="success-title">You're all set!</div>
+      <p class="success-sub" id="success-sub">Your download is starting now. Check your inbox for updates on new tools.</p>
+      <a href="finance-tracker.html" download="finance-tracker-by-hadi.html" class="download-btn" id="download-link">⬇ Download now</a>
+      <hr class="modal-divider" style="margin-top:24px">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:12px">If this saves you money, consider buying me a coffee ☕</p>
+      <a href="https://buymeacoffee.com/hadijawed" target="_blank" class="coffee-btn">☕ Buy me a coffee</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// UPDATE THESE TWO LINES WHEN YOU POST A NEW VIDEO
+const LATEST_VIDEO_ID = 'PASTE_YOUR_VIDEO_ID_HERE'; // e.g. 'dQw4w9WgXcQ'
+const LATEST_VIDEO_TITLE = 'How I Budget My Money in 2026';
+const LATEST_VIDEO_DESC = 'A full walkthrough of the exact system I use to track income, expenses, and investments every month — using the free finance tracker on this site.';
+// ─────────────────────────────────────────
+
+function initVideos() {
+  const heroImg = document.getElementById('lv-img');
+  const ytThumb = document.getElementById('yt-thumb-img');
+  const ytWatchLink = document.getElementById('yt-watch-link');
+  const ytTitle = document.getElementById('yt-video-title');
+  const ytDesc = document.getElementById('yt-video-desc');
+  const lvTitle = document.getElementById('lv-title');
+  if(LATEST_VIDEO_ID && LATEST_VIDEO_ID !== 'PASTE_YOUR_VIDEO_ID_HERE') {
+    const thumb = `https://img.youtube.com/vi/${LATEST_VIDEO_ID}/maxresdefault.jpg`;
+    const thumbFallback = `https://img.youtube.com/vi/${LATEST_VIDEO_ID}/hqdefault.jpg`;
+    if(heroImg) { heroImg.src = thumb; heroImg.onerror = ()=>{ heroImg.src = thumbFallback; }; }
+    if(ytThumb) { ytThumb.src = thumb; ytThumb.onerror = ()=>{ ytThumb.src = thumbFallback; }; }
+    if(ytWatchLink) ytWatchLink.href = `https://www.youtube.com/watch?v=${LATEST_VIDEO_ID}`;
+  }
+  if(ytTitle) ytTitle.textContent = LATEST_VIDEO_TITLE;
+  if(ytDesc) ytDesc.textContent = LATEST_VIDEO_DESC;
+  if(lvTitle) lvTitle.textContent = LATEST_VIDEO_TITLE;
+}
+
+function playVideo() {
+  if(!LATEST_VIDEO_ID || LATEST_VIDEO_ID === 'PASTE_YOUR_VIDEO_ID_HERE') {
+    window.open('https://www.youtube.com/@HadiJawedd', '_blank'); return;
+  }
+  const wrap = document.getElementById('lv-iframe-wrap');
+  const iframe = document.getElementById('lv-iframe');
+  const play = document.querySelector('.lv-play');
+  const img = document.getElementById('lv-img');
+  iframe.src = `https://www.youtube.com/embed/${LATEST_VIDEO_ID}?autoplay=1`;
+  wrap.style.display = 'block';
+  if(play) play.style.display = 'none';
+  if(img) img.style.display = 'none';
+}
+
+function playYTVideo() {
+  if(!LATEST_VIDEO_ID || LATEST_VIDEO_ID === 'PASTE_YOUR_VIDEO_ID_HERE') {
+    window.open('https://www.youtube.com/@HadiJawedd', '_blank'); return;
+  }
+  const container = document.getElementById('yt-iframe-container');
+  const iframe = document.getElementById('yt-iframe');
+  const overlay = document.querySelector('.yt-embed-overlay');
+  const img = document.getElementById('yt-thumb-img');
+  iframe.src = `https://www.youtube.com/embed/${LATEST_VIDEO_ID}?autoplay=1`;
+  container.style.display = 'block';
+  if(overlay) overlay.style.display = 'none';
+  if(img) img.style.display = 'none';
+}
+
+initVideos();
+
+function openModal(product) {
+  currentProduct = product;
+  document.getElementById('modal-form-state').style.display = 'block';
+  document.getElementById('modal-success-state').classList.remove('show');
+  document.getElementById('modal-name').value = '';
+  document.getElementById('modal-email').value = '';
+  if (product === 'notify') {
+    document.getElementById('modal-accent-bar').style.background = 'var(--yellow)';
+    document.getElementById('modal-icon').textContent = '🔔';
+    document.getElementById('modal-title').textContent = 'Get notified first';
+    document.getElementById('modal-sub').textContent = "Drop your email and you'll be first to know when this tool launches.";
+    document.getElementById('modal-btn').textContent = 'Notify me →';
+    document.getElementById('modal-btn').style.background = 'var(--text)';
+  } else {
+    document.getElementById('modal-accent-bar').style.background = 'var(--blue)';
+    document.getElementById('modal-icon').textContent = '📊';
+    document.getElementById('modal-title').textContent = 'Get the Finance Tracker';
+    document.getElementById('modal-sub').textContent = 'Enter your name and email — your download starts instantly. No account needed, ever.';
+    document.getElementById('modal-btn').textContent = 'Get free access →';
+    document.getElementById('modal-btn').style.background = 'var(--blue)';
+  }
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function submitModal(e) {
+  e.preventDefault();
+  const name = document.getElementById('modal-name').value.trim();
+  const email = document.getElementById('modal-email').value.trim();
+  // Save to localStorage (swap for Mailchimp/ConvertKit API later)
+  const subs = JSON.parse(localStorage.getItem('hj_subs') || '[]');
+  subs.push({ name, email, product: currentProduct, date: new Date().toISOString() });
+  localStorage.setItem('hj_subs', JSON.stringify(subs));
+  document.getElementById('modal-form-state').style.display = 'none';
+  const s = document.getElementById('modal-success-state');
+  s.classList.add('show');
+  if (currentProduct === 'notify') {
+    document.getElementById('success-title').textContent = "You're on the list!";
+    document.getElementById('success-sub').textContent = "We'll email you the moment it launches. Thanks for the support!";
+    document.getElementById('download-link').style.display = 'none';
+  } else {
+    document.getElementById('success-title').textContent = "You're all set!";
+    document.getElementById('success-sub').textContent = 'Your download is starting. Welcome to the community!';
+    document.getElementById('download-link').style.display = 'inline-flex';
+    setTimeout(() => { document.getElementById('download-link').click(); }, 700);
+  }
+}
+
+function submitNewsletter(e) {
+  e.preventDefault();
+  const email = document.getElementById('nl-email').value.trim();
+  const subs = JSON.parse(localStorage.getItem('hj_subs') || '[]');
+  subs.push({ email, product: 'newsletter', date: new Date().toISOString() });
+  localStorage.setItem('hj_subs', JSON.stringify(subs));
+  document.getElementById('nl-form').style.display = 'none';
+  document.getElementById('nl-success').style.display = 'block';
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
