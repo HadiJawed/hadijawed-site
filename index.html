@@ -1297,33 +1297,50 @@ function submitModal(e) {
   e.preventDefault();
   const name = document.getElementById('modal-name').value.trim();
   const email = document.getElementById('modal-email').value.trim();
-  // Save to localStorage (swap for Mailchimp/ConvertKit API later)
-  const subs = JSON.parse(localStorage.getItem('hj_subs') || '[]');
-  subs.push({ name, email, product: currentProduct, date: new Date().toISOString() });
-  localStorage.setItem('hj_subs', JSON.stringify(subs));
-  document.getElementById('modal-form-state').style.display = 'none';
-  const s = document.getElementById('modal-success-state');
-  s.classList.add('show');
-  if (currentProduct === 'notify') {
-    document.getElementById('success-title').textContent = "You're on the list!";
-    document.getElementById('success-sub').textContent = "We'll email you the moment it launches. Thanks for the support!";
-    document.getElementById('download-link').style.display = 'none';
-  } else {
-    document.getElementById('success-title').textContent = "You're all set!";
-    document.getElementById('success-sub').textContent = 'Your download is starting. Welcome to the community!';
-    document.getElementById('download-link').style.display = 'inline-flex';
-    setTimeout(() => { document.getElementById('download-link').click(); }, 700);
-  }
+  const btn = document.getElementById('modal-btn');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  fetch('https://app.kit.com/forms/80a6a4f433/subscriptions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email_address: email, first_name: name, tags: [currentProduct] })
+  })
+  .catch(() => {})
+  .finally(() => {
+    document.getElementById('modal-form-state').style.display = 'none';
+    const s = document.getElementById('modal-success-state');
+    s.classList.add('show');
+    if (currentProduct === 'notify') {
+      document.getElementById('success-title').textContent = "You're on the list!";
+      document.getElementById('success-sub').textContent = "We'll email you the moment it launches. Thanks for the support!";
+      document.getElementById('download-link').style.display = 'none';
+    } else {
+      document.getElementById('success-title').textContent = "You're all set!";
+      document.getElementById('success-sub').textContent = 'Your download is starting. Welcome to the community!';
+      document.getElementById('download-link').style.display = 'inline-flex';
+      setTimeout(() => { document.getElementById('download-link').click(); }, 700);
+    }
+  });
 }
 
 function submitNewsletter(e) {
   e.preventDefault();
   const email = document.getElementById('nl-email').value.trim();
-  const subs = JSON.parse(localStorage.getItem('hj_subs') || '[]');
-  subs.push({ email, product: 'newsletter', date: new Date().toISOString() });
-  localStorage.setItem('hj_subs', JSON.stringify(subs));
-  document.getElementById('nl-form').style.display = 'none';
-  document.getElementById('nl-success').style.display = 'block';
+  const btn = document.querySelector('#nl-form button');
+  btn.textContent = 'Subscribing...';
+  btn.disabled = true;
+
+  fetch('https://app.kit.com/forms/80a6a4f433/subscriptions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email_address: email, tags: ['newsletter'] })
+  })
+  .catch(() => {})
+  .finally(() => {
+    document.getElementById('nl-form').style.display = 'none';
+    document.getElementById('nl-success').style.display = 'block';
+  });
 }
 
 // Scroll reveal
