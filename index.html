@@ -10,134 +10,165 @@
 <meta property="og:url" content="https://hadijawedd.netlify.app/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#101418" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#2438F0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
 <style>
-/* VOICE  work: a calm, credible money tool from one person
-   IDEA   a well-made monthly statement: figures first, fine rules, one highlight
-   PICTURE the Finance Tracker itself, drawn large under the hero
-   COLOUR white ground, ink #101418, slate, one yellow slab #ffd84a on the key figure
-   TYPE   Manrope 800 for titles, Manrope for text
-   LAYOUT title across the top, product beneath full width; phones stack title, product, buttons */
-:root{color-scheme:light dark;--bg:light-dark(#ffffff,#101418);--ink:light-dark(#101418,#eef1f4);--slate:light-dark(#5a6573,#9aa5b2);--line:light-dark(#e3e7ec,#262d36);--panel:light-dark(#f6f7f9,#171d24);--yel:#ffd84a;--inc:light-dark(#101418,#eef1f4);--exp:light-dark(#b7c0cb,#4a5563)}
+/* BRIEF   Hadi Jawed: Canadian personal-finance YouTuber + free tools. Bold & energetic.
+   IDEA    The hero is a live "watch it grow" machine: drag the monthly amount, the money stacks up year by year.
+   COLOUR  cobalt #2438F0 (hero/newsletter slabs), sun #FFD23F (brand square, growth), coral #FF5A45 (one hot accent),
+           ink #17153B (deep indigo text), paper #FFFFFF / #F1F2FF
+   TYPE    Archivo: expanded 125 width / 900 weight for headlines (thumbnail energy), normal width for text
+   LAYOUT  left-aligned; full-bleed colour slabs alternate with quiet white sections; phones stack everything */
+:root{
+  color-scheme:light dark;
+  --cobalt:#2438F0;--cobalt-2:#1A29C2;--sun:#FFD23F;--coral:#FF5A45;
+  --bg:light-dark(#ffffff,#0f0e2a);
+  --ink:light-dark(#17153B,#EEEEFF);
+  --soft:light-dark(#5B5980,#A9A8D6);
+  --paper:light-dark(#F1F2FF,#18173D);
+  --line:light-dark(#DCDDF5,#2C2B5A);
+}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit}
-img,svg{max-width:100%}
-.wrap{max-width:1180px;margin:0 auto}
-.band{padding-block:clamp(48px,7vw,104px);padding-left:max(5vw,16px,env(safe-area-inset-left,0px));padding-right:max(5vw,16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-weight:800;letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance}
-h1{font-size:clamp(36px,5.4vw,60px);max-width:14ch}
-h2{font-size:clamp(30px,3.6vw,44px);max-width:20ch}
-h3{font-size:20px;letter-spacing:-.01em;line-height:1.25}
+img,svg{max-width:100%;display:block}
 p{margin:0}
-.lede{font-size:clamp(17px,1.5vw,19px);color:var(--slate);max-width:56ch}
-.muted{color:var(--slate)}
-.small{font-size:14px}
+.wrap{max-width:1200px;margin:0 auto}
+.band{padding-block:clamp(56px,8vw,120px);padding-inline:max(5vw,16px)}
+
+/* type */
+h1,h2,h3,.big{font-stretch:125%;font-weight:900;letter-spacing:-.02em;line-height:.98;margin:0;text-wrap:balance}
+h1{font-size:clamp(42px,7.2vw,92px);max-width:11ch}
+h2{font-size:clamp(32px,4.6vw,56px);max-width:16ch}
+h3{font-size:21px;line-height:1.15;letter-spacing:-.01em}
+.lede{font-size:clamp(18px,1.6vw,20px);max-width:52ch;color:var(--soft)}
+.small{font-size:15px}
+.stack{display:grid;gap:22px;align-content:start}
+
 /* header */
-header{position:relative;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-@media(min-width:900px){header{position:sticky;top:0}}
-.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding:14px max(5vw,16px);max-width:1280px;margin:0 auto}
-.mark{font-weight:800;font-size:18px;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:10px}
-.mark i{width:28px;height:28px;border-radius:8px;background:var(--ink);display:grid;place-items:center}
-.mark i:after{content:"";width:12px;height:12px;background:var(--yel);border-radius:2px}
-nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,32px);flex-wrap:wrap}
-nav a{text-decoration:none;font-weight:600;font-size:15px;color:var(--slate);padding:10px 0}
-nav a:hover{color:var(--ink)}
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;font:700 16px/1 Manrope,system-ui,sans-serif;text-decoration:none;border:1.5px solid var(--ink);cursor:pointer;transition:transform .15s,background .15s}
-.btn:hover{transform:translateY(-1px)}
-.btn:focus-visible,nav a:focus-visible,input:focus-visible{outline:3px solid var(--yel);outline-offset:3px}
-.pri{background:var(--ink);color:var(--bg)}
-.sec{background:transparent;color:var(--ink)}
-nav .btn{min-height:40px;padding:0 16px;font-size:14px;color:var(--bg)}
-.row{display:flex;flex-wrap:wrap;gap:12px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding:12px max(5vw,16px);max-width:1300px;margin:0 auto}
+.mark{font-stretch:125%;font-weight:900;font-size:19px;text-decoration:none;display:flex;align-items:center;gap:10px}
+.mark i{width:30px;height:30px;border-radius:9px;background:var(--cobalt);display:grid;place-items:center;transform:rotate(-8deg)}
+.mark i:after{content:"";width:13px;height:13px;background:var(--sun);border-radius:3px}
+nav{display:flex;align-items:center;gap:clamp(14px,2.6vw,34px);flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:700;font-size:15px;padding:10px 0}
+nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:3px;text-decoration-color:var(--coral);text-underline-offset:6px}
+
+/* buttons: chunky, hard shadow, they press in when clicked */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border-radius:14px;font:800 17px/1 Archivo,system-ui,sans-serif;text-decoration:none;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
+.btn.sun{background:var(--sun);color:#17153B;border-color:#17153B;box-shadow:4px 4px 0 #17153B}
+.btn.sun:hover{box-shadow:6px 6px 0 #17153B}
+.btn.ink{background:var(--ink);color:var(--bg)}
+nav .btn{min-height:42px;padding:0 16px;font-size:15px;box-shadow:3px 3px 0 var(--ink)}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.row{display:flex;flex-wrap:wrap;gap:14px}
+
 /* hero */
-.hero{padding-bottom:0}
-.top{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px 56px;align-items:end}
-.top .side{display:grid;gap:24px}
-.face{float:left;width:56px;height:56px;border-radius:50%;object-fit:cover;margin:4px 16px 4px 0}
-.portrait{width:clamp(120px,16vw,168px);aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 30%}
-.proof{display:flex;flex-wrap:wrap;gap:8px 28px;margin:40px 0 0;padding:0;list-style:none;font-size:15px;font-weight:600}
-.proof li{display:flex;align-items:center;gap:8px}
-.proof svg{flex:none}
-/* tracker mock */
-.app{margin-top:48px;border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;background:var(--panel);padding:clamp(16px,2.4vw,28px);box-shadow:0 -1px 0 var(--line)}
-.apphd{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-.tabs{display:flex;gap:4px;flex-wrap:wrap}
-.tabs span{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;color:var(--slate)}
-.tabs .on{background:var(--bg);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
-.kpi{padding:20px 16px 20px 0}
-.kpi+.kpi{padding-left:16px;border-left:1px solid var(--line)}
-.kpi b{display:block;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-.03em;white-space:nowrap;font-variant-numeric:tabular-nums}
-.kpi.hi b{background:var(--yel);color:#101418;display:inline-block;padding:0 8px;margin-left:-8px;border-radius:4px}
-.kpi span{display:block;margin-bottom:4px;font-size:13px;color:var(--slate);font-weight:600}
-.panes{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px;padding-top:24px}
-.ph{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px;font-size:14px;font-weight:700}
-.key{display:flex;gap:14px;font-size:13px;font-weight:600;color:var(--slate)}
-.key i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
-.cols{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,2vw,20px);height:200px;align-items:end;border-bottom:1px solid var(--line)}
-.col{display:flex;gap:4px;align-items:end;justify-content:center;height:100%}
-.col i{display:block;width:min(18px,40%);border-radius:3px 3px 0 0;transform-origin:bottom;animation:grow .8s cubic-bezier(.2,.7,.2,1) both}
-.mon{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,2vw,20px);font-size:13px;color:var(--slate);text-align:center;padding-top:8px;font-weight:600}
-.cats{display:grid;gap:12px}
-.cat{display:grid;grid-template-columns:7.5em minmax(0,1fr) auto;gap:12px;align-items:center;font-size:14px}
-.cat .tr{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
-.cat .tr i{display:block;height:100%;background:var(--ink);border-radius:99px}
-.cat b{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
-.note{font-size:13px;color:var(--slate);margin-top:16px}
-@keyframes grow{from{transform:scaleY(0)}}
-@media(prefers-reduced-motion:reduce){.col i{animation:none}.btn{transition:none}html{scroll-behavior:auto}}
-/* sections */
-.sep{border-top:1px solid var(--line)}
-.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px 72px;align-items:start}
-.stack-sm{display:grid;gap:20px}
-.feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;margin:0;padding:0;list-style:none}
-.feats li{padding:20px 0;border-top:1px solid var(--line)}
-.feats li p{color:var(--slate);font-size:15px;margin-top:6px}
-.next{margin-top:56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:stretch}
-.card{border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;gap:8px;align-content:start}
-.card .tag{font-size:13px;font-weight:700;color:var(--slate)}
-.card.lead{background:var(--panel);border-color:transparent}
-/* video */
-.dark{background:#101418;color:#eef1f4;--line:#2a323c;--slate:#9aa5b2}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .dark{background:#0a0d11}}
-:root[data-theme=dark] .dark{background:#0a0d11}
-.dark .pri{background:#eef1f4;color:#101418;border-color:#eef1f4}
-.dark .sec{color:#eef1f4;border-color:#eef1f4}
-.vid{display:block;text-decoration:none;border-radius:16px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#1b222b}
+.hero{background:var(--cobalt);color:#fff;position:relative;overflow:hidden}
+.hero .lede{color:#D6DAFF}
+.hero .btn{border-color:#17153B}
+.hero .btn:not(.sun){background:#fff;color:#17153B;box-shadow:4px 4px 0 #17153B}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px 64px;align-items:center}
+.who{display:flex;align-items:center;gap:14px;font-weight:700}
+.who img{width:58px;height:58px;border-radius:50%;object-fit:cover;object-position:center 30%;border:3px solid var(--sun)}
+.who span{color:#D6DAFF;font-weight:500;display:block;font-size:15px}
+
+/* the growth machine */
+.grow{background:#fff;color:#17153B;border:2px solid #17153B;border-radius:24px;box-shadow:10px 10px 0 #17153B;padding:clamp(20px,2.6vw,30px);display:grid;gap:18px;transform:rotate(1.2deg)}
+.grow label,.grow legend{font-weight:800;font-size:15px}
+.grow fieldset{border:0;margin:0;padding:0;display:grid;gap:10px}
+.amt{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.amt output{font-stretch:125%;font-weight:900;font-size:24px;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:99px;background:linear-gradient(to right,var(--cobalt) var(--p,30%),#E4E6FF var(--p,30%));border:2px solid #17153B;margin:4px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--sun);border:3px solid #17153B;cursor:grab;box-shadow:2px 2px 0 #17153B}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--sun);border:3px solid #17153B;cursor:grab}
+.yrs{display:flex;gap:8px;flex-wrap:wrap}
+.yrs input{position:absolute;opacity:0;pointer-events:none}
+.yrs label{font-weight:800;font-size:15px;padding:8px 16px;border:2px solid #17153B;border-radius:12px;cursor:pointer;font-variant-numeric:tabular-nums}
+.yrs input:checked+label{background:#17153B;color:#fff}
+.yrs input:focus-visible+label{outline:3px solid var(--coral);outline-offset:2px}
+.result{border-top:2px dashed #C9CBF2;padding-top:16px}
+.result .big{font-size:clamp(44px,5.6vw,68px);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.split-line{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;font-weight:700;margin-top:8px}
+.split-line i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1.5px solid #17153B}
+.stackbars{display:flex;align-items:end;gap:3px;height:120px;border-bottom:2px solid #17153B}
+.stackbars div{flex:1;display:flex;flex-direction:column-reverse;height:100%}
+.stackbars b{display:block;background:var(--cobalt);transition:height .35s cubic-bezier(.2,.8,.2,1)}
+.stackbars b+b{background:var(--sun);border:1.5px solid #17153B;border-bottom:0;border-radius:3px 3px 0 0}
+.fine{font-size:13px;color:#5B5980}
+
+/* proof strip */
+.proof{background:var(--sun);color:#17153B;border-block:2px solid #17153B;padding:18px max(5vw,16px)}
+.proof ul{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 32px;margin:0 auto;padding:0;list-style:none;font-weight:800;font-size:17px;max-width:1200px}
+.proof li{display:flex;align-items:center;gap:10px}
+.proof li:before{content:"";width:12px;height:12px;background:var(--coral);border:2px solid #17153B;border-radius:50%;flex:none}
+
+/* tools */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px 80px;align-items:start}
+.feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 36px;margin:0;padding:0;list-style:none}
+.feats li{border-top:3px solid var(--ink);padding-top:14px}
+.feats p{color:var(--soft);font-size:16px;margin-top:6px}
+.next{margin-top:64px;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:20px}
+.tile{border:2px solid var(--ink);border-radius:20px;padding:24px;display:grid;gap:8px;align-content:start}
+.tile .tag{justify-self:start;font-size:14px;font-weight:800;padding:3px 10px;border-radius:8px;background:var(--paper);border:1.5px solid var(--ink)}
+.tile p{color:var(--soft);font-size:16px}
+.tile.live{background:var(--cobalt);color:#fff;border-color:#17153B;box-shadow:6px 6px 0 var(--ink)}
+.tile.live .tag{background:var(--sun);color:#17153B;border-color:#17153B}
+.tile.live p{color:#D6DAFF}
+.tile.live a{color:#fff;font-weight:800}
+
+/* videos */
+.videos{background:var(--paper)}
+.vid{display:block;text-decoration:none;border-radius:22px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#17153B;border:2px solid var(--ink);box-shadow:10px 10px 0 var(--coral);transform:rotate(-1.2deg);transition:transform .2s}
+.vid:hover{transform:rotate(0)}
 .vid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.play{position:absolute;left:24px;bottom:24px}
-.vid:hover .play{transform:scale(1.06)}
-.play{transition:transform .2s}
-.topics{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
-.topics li{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600}
+.play{position:absolute;left:22px;bottom:22px;width:78px;height:78px;border-radius:50%;background:var(--coral);border:3px solid #17153B;display:grid;place-items:center}
+.vid-title{font-stretch:110%;font-weight:900;font-size:clamp(22px,2.2vw,28px);line-height:1.15;text-decoration:none;display:block}
+.vid-title:hover{text-decoration:underline;text-decoration-color:var(--coral);text-decoration-thickness:3px}
+.topics{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+.topics li{border:2px solid var(--ink);border-radius:12px;padding:6px 14px;font-size:15px;font-weight:700;background:var(--bg)}
+
 /* about */
-.facts{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 24px}
-.facts dt,.facts dd{padding:14px 0;border-top:1px solid var(--line);margin:0}
-.facts dt{color:var(--slate);font-size:14px;font-weight:600;padding-top:16px}
-.facts dd{font-weight:600}
-.facts a{text-underline-offset:3px}
+.portrait{width:clamp(140px,18vw,200px);aspect-ratio:1;border-radius:28px;object-fit:cover;object-position:center 30%;border:2px solid var(--ink);box-shadow:8px 8px 0 var(--sun);transform:rotate(-3deg)}
+.facts{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 28px}
+.facts dt,.facts dd{padding:16px 0;border-top:2px solid var(--line);margin:0}
+.facts dt{color:var(--soft);font-size:15px;font-weight:600}
+.facts dd{font-weight:800}
+.facts a{text-underline-offset:4px;text-decoration-thickness:2px}
+
 /* newsletter */
-.news{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px 72px;align-items:center}
+.news{background:var(--cobalt);color:#fff}
+.news .lede{color:#D6DAFF}
+.news-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:36px 72px;align-items:center}
 form{display:grid;gap:12px}
-.field{display:flex;gap:8px;flex-wrap:wrap}
-input[type=email]{flex:1 1 220px;min-height:52px;font:500 16px Manrope,system-ui,sans-serif;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
-input[type=email]:focus{border-color:var(--ink)}
-.msg{font-size:14px;min-height:1.5em;font-weight:600}
+form label{font-weight:800}
+.field{display:flex;gap:12px;flex-wrap:wrap}
+input[type=email]{flex:1 1 240px;min-height:56px;font:600 17px Archivo,system-ui,sans-serif;padding:0 18px;border-radius:14px;border:2px solid #17153B;background:#fff;color:#17153B}
+.news .btn{border-color:#17153B}
+.msg{font-size:15px;min-height:1.5em;font-weight:700;color:var(--sun)}
 .hide{position:absolute;left:-9999px}
+
 /* footer */
-footer{border-top:1px solid var(--line)}
-.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px 32px;align-items:center;padding-block:32px}
-.foot nav a{font-size:14px}
-@media(max-width:900px){.top,.split,.news{grid-template-columns:minmax(0,1fr)}.panes{grid-template-columns:minmax(0,1fr)}.next{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:600px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi:nth-child(3){padding-left:0;border-left:0}.kpi:nth-child(n+3){border-top:1px solid var(--line)}.feats{grid-template-columns:minmax(0,1fr)}.tabs span:nth-child(n+4){display:none}.cols{height:150px}.bar nav{width:100%;justify-content:space-between}.proof{margin-top:28px}.app{margin-top:36px}}
+footer{background:#17153B;color:#EEEEFF}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px 32px;align-items:center;padding-block:36px}
+.foot nav a{font-size:15px}
+
+/* one orchestrated load moment: hero card lands, bars rise */
+@media(prefers-reduced-motion:no-preference){
+  .grow{animation:land .7s cubic-bezier(.2,.9,.3,1.2) .15s both}
+  @keyframes land{from{opacity:0;transform:translateY(40px) rotate(6deg)}}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.vid,.stackbars b{transition:none}}
+
+@media(max-width:940px){.hero-grid,.two,.news-grid{grid-template-columns:minmax(0,1fr)}.next{grid-template-columns:minmax(0,1fr)}.grow{transform:none}}
+@media(max-width:600px){.feats{grid-template-columns:minmax(0,1fr)}.bar nav{width:100%;justify-content:space-between}.grow{box-shadow:6px 6px 0 #17153B}.vid{box-shadow:6px 6px 0 var(--coral)}.stackbars{height:96px}.proof ul{justify-content:flex-start}}
 </style>
 </head>
 <body>
@@ -148,58 +179,64 @@ footer{border-top:1px solid var(--line)}
       <a href="#tools">Tools</a>
       <a href="#videos">Videos</a>
       <a href="#about">About</a>
-      <a class="btn pri" href="#newsletter">Newsletter</a>
+      <a class="btn" href="#newsletter">Newsletter</a>
     </nav>
   </div>
 </header>
 
 <main id="top">
   <section class="band hero">
-    <div class="wrap">
-      <div class="top">
-        <h1>Free money tools for everyday Canadians.</h1>
-        <div class="side">
-          <p class="lede"><img class="face" src="assets/hadi.jpg" alt="Hadi Jawed" width="56" height="56">I'm Hadi, a financial analyst at a Fortune 100 company in Toronto. I build free tools and make YouTube videos that make budgeting, investing and your RRSP and TFSA simpler.</p>
-          <div class="row">
-            <a class="btn pri" href="https://hadijawedd.netlify.app/finance-tracker">Open the Finance Tracker</a>
-            <a class="btn sec" href="https://www.youtube.com/@HadiJawedd">Watch on YouTube</a>
-          </div>
+    <div class="wrap hero-grid">
+      <div class="stack">
+        <h1>Make your money work harder.</h1>
+        <p class="lede">Free tools and straight-talking YouTube videos that make budgeting, investing and your RRSP and TFSA simple, made for Canadians.</p>
+        <div class="who"><img src="assets/hadi.jpg" alt="" width="58" height="58"><p>Hadi Jawed<span>Financial analyst at a Fortune 100 company, Toronto</span></p></div>
+        <div class="row">
+          <a class="btn sun" href="https://hadijawedd.netlify.app/finance-tracker">Open the Finance Tracker</a>
+          <a class="btn" href="https://www.youtube.com/@HadiJawedd">Watch on YouTube</a>
         </div>
       </div>
-      <ul class="proof">
-        <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 9.2l2.3 2.3 4.7-4.9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Used by 100+ people</li>
-        <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 9.2l2.3 2.3 4.7-4.9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>No account, and your data stays in your browser</li>
-        <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 9.2l2.3 2.3 4.7-4.9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Panelist at a Fidelity Canada investor event</li>
-      </ul>
 
-      <div class="app" role="img" aria-label="Preview of the Finance Tracker dashboard with sample data">
-        <div class="apphd">
-          <div class="tabs"><span class="on">Dashboard</span><span>Transactions</span><span>Budget</span><span>Goals</span><span>Net worth</span><span>Tax</span></div>
-          <span class="small muted">November 2026 · sample data</span>
+      <form class="grow" id="grow" aria-label="Investment growth calculator" onsubmit="return false">
+        <div>
+          <div class="amt"><label for="monthly">Invest every month</label><output id="mOut" for="monthly">$200</output></div>
+          <input type="range" id="monthly" min="25" max="1000" step="25" value="200">
         </div>
-        <div class="kpis" id="kpis"></div>
-        <div class="panes">
-          <div>
-            <div class="ph"><span>Income vs expenses</span><span class="key"><span><i style="background:var(--inc)"></i>Income</span><span><i style="background:var(--exp)"></i>Expenses</span></span></div>
-            <div class="cols" id="cols"></div>
-            <div class="mon" id="mon"></div>
+        <fieldset>
+          <legend>For how long?</legend>
+          <div class="yrs">
+            <input type="radio" name="yrs" id="y5" value="5"><label for="y5">5 years</label>
+            <input type="radio" name="yrs" id="y10" value="10"><label for="y10">10 years</label>
+            <input type="radio" name="yrs" id="y20" value="20" checked><label for="y20">20 years</label>
+            <input type="radio" name="yrs" id="y30" value="30"><label for="y30">30 years</label>
           </div>
-          <div>
-            <div class="ph"><span>Where it went</span><span class="muted" id="cattot"></span></div>
-            <div class="cats" id="cats"></div>
-          </div>
+        </fieldset>
+        <div class="result" aria-live="polite">
+          <p style="font-weight:800">You could end up with</p>
+          <p class="big" id="total">$92,408</p>
+          <p class="split-line"><span><i style="background:var(--cobalt)"></i><span id="putIn">$48,000 you put in</span></span><span><i style="background:var(--sun)"></i><span id="gain">$44,408 from growth</span></span></p>
         </div>
-      </div>
+        <div class="stackbars" id="bars" aria-hidden="true"></div>
+        <p class="fine">Assumes a 6% yearly return, compounded monthly. Real returns go up and down. Not financial advice.</p>
+      </form>
     </div>
   </section>
 
-  <section class="band sep" id="tools">
+  <div class="proof">
+    <ul>
+      <li>Used by 100+ people</li>
+      <li>No account, and your data stays in your browser</li>
+      <li>Panelist at a Fidelity Canada investor event</li>
+    </ul>
+  </div>
+
+  <section class="band" id="tools">
     <div class="wrap">
-      <div class="split">
-        <div class="stack-sm">
+      <div class="two">
+        <div class="stack">
           <h2>One tracker for your whole financial picture.</h2>
           <p class="lede">Income, spending, investing, goals and taxes in one free dashboard. It runs entirely in your browser, so nothing is uploaded and there's nothing to sign up for.</p>
-          <div class="row"><a class="btn pri" href="https://hadijawedd.netlify.app/finance-tracker">Open the Finance Tracker</a></div>
+          <div class="row"><a class="btn ink" href="https://hadijawedd.netlify.app/finance-tracker">Open the Finance Tracker</a></div>
         </div>
         <ul class="feats">
           <li><h3>Monthly dashboard</h3><p>Income, expenses, investing and cash savings by month, with a spending breakdown.</p></li>
@@ -211,60 +248,60 @@ footer{border-top:1px solid var(--line)}
         </ul>
       </div>
       <div class="next">
-        <div class="card lead"><span class="tag">Available now</span><h3>Personal Finance Tracker</h3><p class="muted small">Free, no account needed.</p></div>
-        <div class="card"><span class="tag">Coming next</span><h3>Portfolio Tracker</h3><p class="muted small">Your holdings and returns across accounts in one place.</p></div>
-        <div class="card"><span class="tag">Coming next</span><h3>Debt Payoff Planner</h3><p class="muted small">A clear plan and date for paying it off. <a href="#newsletter">Get notified</a></p></div>
+        <div class="tile live"><span class="tag">Available now</span><h3>Personal Finance Tracker</h3><p>Free, no account needed. <a href="https://hadijawedd.netlify.app/finance-tracker">Open it</a></p></div>
+        <div class="tile"><span class="tag">Coming next</span><h3>Portfolio Tracker</h3><p>Your holdings and returns across accounts in one place.</p></div>
+        <div class="tile"><span class="tag">Coming next</span><h3>Debt Payoff Planner</h3><p>A clear plan and date for paying it off. <a href="#newsletter">Get notified</a></p></div>
       </div>
     </div>
   </section>
 
-  <section class="band dark" id="videos">
-    <div class="wrap split">
+  <section class="band videos" id="videos">
+    <div class="wrap two">
       <a class="vid" id="vid" href="https://www.youtube.com/@HadiJawedd">
         <img src="assets/latest-video.jpg" alt="" width="960" height="540">
-        <span class="play" aria-hidden="true"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="38" fill="#eef1f4"/><path d="M30 24l26 14-26 14z" fill="#101418"/></svg></span>
+        <span class="play" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M8 4l20 11L8 26z" fill="#17153B"/></svg></span>
       </a>
-      <div class="stack-sm">
-        <h2>Money explained the way I'd explain it to a friend.</h2>
+      <div class="stack">
+        <h2>Money, explained like I'd explain it to a friend.</h2>
         <p class="lede">Short, practical videos on budgeting, investing and making the most of Canadian accounts.</p>
-        <p><span class="muted small" style="font-weight:700">Latest video</span><br><a id="vtitle" style="font-weight:700;font-size:19px;text-decoration:none" href="https://www.youtube.com/@HadiJawedd">Watch the latest video</a></p>
+        <div><p class="small" style="font-weight:700;color:var(--soft);margin-bottom:4px">Latest video</p><a class="vid-title" id="vtitle" href="https://www.youtube.com/@HadiJawedd">Watch the latest video</a></div>
         <ul class="topics"><li>Budgeting</li><li>Investing</li><li>RRSP and TFSA</li><li>Financial goals</li></ul>
-        <div class="row"><a class="btn pri" href="https://www.youtube.com/@HadiJawedd?sub_confirmation=1">Subscribe on YouTube</a></div>
+        <div class="row"><a class="btn ink" href="https://www.youtube.com/@HadiJawedd?sub_confirmation=1">Subscribe on YouTube</a></div>
       </div>
     </div>
   </section>
 
   <section class="band" id="about">
-    <div class="wrap split">
-      <div class="stack-sm">
-        <img class="portrait" src="assets/hadi.jpg" alt="Hadi Jawed" width="168" height="168">
+    <div class="wrap two">
+      <div class="stack">
+        <img class="portrait" src="assets/hadi.jpg" alt="Hadi Jawed" width="200" height="200">
         <h2>Hi, I'm Hadi.</h2>
         <p class="lede">I work in finance by day and build what I wish I'd had when I started managing my own money. Everything here is free and made for Canadians. When I'm not working on spreadsheets, I'm probably playing soccer.</p>
         <p class="lede">I also share my stock picks, watchlists and portfolio updates on Blossom, where 100+ people follow along.</p>
-        <div class="row"><a class="btn sec" href="https://www.blossomsocial.com/users/Hadi-Jawed__wJQUNrcNTp8CBGXq">Follow on Blossom</a></div>
+        <div class="row"><a class="btn" href="https://www.blossomsocial.com/users/Hadi-Jawed__wJQUNrcNTp8CBGXq">Follow on Blossom</a></div>
       </div>
       <dl class="facts">
         <dt>Based in</dt><dd>Toronto, Ontario</dd>
         <dt>Work</dt><dd>Financial analyst, Fortune 100 company</dd>
         <dt>Studied</dt><dd>Finance, Wilfrid Laurier University</dd>
         <dt>Speaking</dt><dd>Panelist, Fidelity Canada investor event</dd>
-        <dt>Elsewhere</dt><dd><a href="https://www.youtube.com/@HadiJawedd">YouTube</a> · <a href="https://www.blossomsocial.com/users/Hadi-Jawed__wJQUNrcNTp8CBGXq">Blossom</a></dd>
+        <dt>Elsewhere</dt><dd><a href="https://www.youtube.com/@HadiJawedd">YouTube</a>, <a href="https://www.blossomsocial.com/users/Hadi-Jawed__wJQUNrcNTp8CBGXq">Blossom</a></dd>
       </dl>
     </div>
   </section>
 
-  <section class="band sep" id="newsletter">
-    <div class="wrap news">
-      <div class="stack-sm">
+  <section class="band news" id="newsletter">
+    <div class="wrap news-grid">
+      <div class="stack">
         <h2>New tools and videos, straight to your inbox.</h2>
         <p class="lede">One short email when something new is out, including the Portfolio Tracker and Debt Payoff Planner. No spam, and you can unsubscribe anytime.</p>
       </div>
       <form id="sub" novalidate>
         <label class="hide">Company <input name="company" tabindex="-1" autocomplete="off"></label>
-        <label for="email" class="small" style="font-weight:700">Email address</label>
+        <label for="email">Email address</label>
         <div class="field">
           <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
-          <button class="btn pri" type="submit">Subscribe</button>
+          <button class="btn sun" type="submit">Subscribe</button>
         </div>
         <p class="msg" id="msg" role="status" aria-live="polite"></p>
       </form>
@@ -273,8 +310,8 @@ footer{border-top:1px solid var(--line)}
 </main>
 
 <footer>
-  <div class="wrap band foot" style="padding-block:32px">
-    <span class="small muted">© 2026 Hadi Jawed · Not financial advice.</span>
+  <div class="wrap band foot" style="padding-block:36px">
+    <span class="small">© 2026 Hadi Jawed. Not financial advice.</span>
     <nav aria-label="Footer">
       <a href="https://hadijawedd.netlify.app/finance-tracker">Finance Tracker</a>
       <a href="https://www.youtube.com/@HadiJawedd">YouTube</a>
@@ -296,44 +333,62 @@ footer{border-top:1px solid var(--line)}
   vt.textContent = LATEST_VIDEO_TITLE; vt.href = vurl; va.href = vurl;
   va.setAttribute('aria-label', 'Watch ' + LATEST_VIDEO_TITLE + ' on YouTube');
 
-  const fmt = n => '$' + n.toLocaleString('en-CA');
-  const now = { income: 5800, expenses: 2067, invested: 600 };
-  const rate = Math.round((now.income - now.expenses) / now.income * 100);
-  const kpis = [
-    ['Income', fmt(now.income)],
-    ['Expenses', fmt(now.expenses)],
-    ['Invested', fmt(now.invested)],
-    ['Savings rate', rate + '%', 'hi']
-  ];
-  document.getElementById('kpis').innerHTML = kpis.map(([l, v, c]) =>
-    `<div class="kpi ${c || ''}"><span>${l}</span><b>${v}</b></div>`).join('');
+  // ── Growth calculator ──
+  const fmt = n => '$' + Math.round(n).toLocaleString('en-CA');
+  const RATE = 0.06 / 12;
+  const slider = document.getElementById('monthly'), bars = document.getElementById('bars');
+  const fv = (p, months) => p * ((Math.pow(1 + RATE, months) - 1) / RATE);
+  let shown = 0, raf;
 
-  const months = [['Jun',5800,2310],['Jul',5800,2480],['Aug',5800,2195],['Sep',5800,2240],['Oct',5800,2120],['Nov',5800,2067]];
-  const max = 6000;
-  document.getElementById('cols').innerHTML = months.map(([m, i, e], k) =>
-    `<div class="col" title="${m}: income ${fmt(i)}, expenses ${fmt(e)}"><i style="height:${i/max*100}%;background:var(--inc);animation-delay:${k*60}ms"></i><i style="height:${e/max*100}%;background:var(--exp);animation-delay:${k*60+30}ms"></i></div>`).join('');
-  document.getElementById('mon').innerHTML = months.map(m => `<span>${m[0]}</span>`).join('');
+  function update() {
+    const p = +slider.value;
+    const yrs = +document.querySelector('input[name=yrs]:checked').value;
+    slider.style.setProperty('--p', ((p - 25) / (1000 - 25) * 100) + '%');
+    document.getElementById('mOut').textContent = fmt(p);
+    const total = fv(p, yrs * 12), put = p * yrs * 12;
+    document.getElementById('putIn').textContent = fmt(put) + ' you put in';
+    document.getElementById('gain').textContent = fmt(total - put) + ' from growth';
 
-  const cats = [['Rent',1100],['Groceries',380],['Eating out',186],['Transit',156],['Other',150],['Phone',95]];
-  const total = cats.reduce((s, c) => s + c[1], 0);
-  document.getElementById('cattot').textContent = fmt(total);
-  document.getElementById('cats').innerHTML = cats.map(([n, v]) =>
-    `<div class="cat"><span>${n}</span><span class="tr"><i style="width:${v/cats[0][1]*100}%"></i></span><b>${fmt(v)}</b></div>`).join('');
+    // scale against a large monthly amount so the bars visibly rise as you drag
+    const scale = Math.max(total, fv(1000, yrs * 12) * 0.6);
+    let html = '';
+    for (let y = 1; y <= yrs; y++) {
+      const v = fv(p, y * 12), c = p * y * 12;
+      html += `<div><b style="height:${c / scale * 100}%"></b><b style="height:${(v - c) / scale * 100}%"></b></div>`;
+    }
+    bars.innerHTML = html;
 
+    // count the total up or down to the new value
+    cancelAnimationFrame(raf);
+    const from = shown, t0 = performance.now(), el = document.getElementById('total');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const step = t => {
+      const k = reduce ? 1 : Math.min(1, (t - t0) / 350);
+      shown = from + (total - from) * (1 - Math.pow(1 - k, 3));
+      el.textContent = fmt(shown);
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  }
+  slider.addEventListener('input', update);
+  document.querySelectorAll('input[name=yrs]').forEach(r => r.addEventListener('change', update));
+  update();
+
+  // ── Newsletter ──
   const form = document.getElementById('sub'), msg = document.getElementById('msg');
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const email = form.email.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'Please enter a valid email address.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'Enter an email address like name@example.com.'; return; }
     msg.textContent = 'Subscribing…';
     try {
       if (form.company.value) return; // bot trap
       const res = await fetch(KIT_FORM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email_address: email, tags: ['newsletter'] }) });
       if (!res.ok) throw new Error();
       form.reset();
-      msg.textContent = "You're in. Watch your inbox for the next update.";
+      msg.textContent = "Subscribed. Watch your inbox for the next update.";
     } catch {
-      msg.textContent = "That didn't go through. Please try again in a moment.";
+      msg.textContent = "Subscribing didn't work. Check your connection and try again.";
     }
   });
 }
