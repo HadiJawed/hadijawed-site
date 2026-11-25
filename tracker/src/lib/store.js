@@ -1,6 +1,7 @@
 // All data lives on this device, in IndexedDB. Nothing is ever sent anywhere.
 import { useSyncExternalStore } from 'react';
 import { today, thisMonth, addDays, addMonths, uid, monthKey } from './util.js';
+import { goalSetAsideLeft } from './goals.js';
 
 export const SCHEMA = 3;
 const DB_NAME = 'finance-tracker', STORE = 'kv', KEY = 'state';
@@ -241,9 +242,11 @@ export function safeToSpend(s) {
   const comingIn = rest.filter(r => r.kind === 'income').reduce((x, r) => x + r.amount, 0);
   const comingOut = rest.filter(r => r.kind !== 'income').reduce((x, r) => x + r.amount, 0);
   const income = tot.income + comingIn;
-  const out = tot.expense + tot.invest + comingOut;
+  // Money your goals still need this month is set aside before it counts as spendable
+  const forGoals = goalSetAsideLeft(s);
+  const out = tot.expense + tot.invest + comingOut + forGoals;
   const daysLeft = +end.slice(8) - +t.slice(8) + 1;
-  return { income, out, comingIn, comingOut, spent: tot.expense, invested: tot.invest, safe: income - out, daysLeft, perDay: (income - out) / daysLeft };
+  return { income, out, comingIn, comingOut, forGoals, spent: tot.expense, invested: tot.invest, safe: income - out, daysLeft, perDay: (income - out) / daysLeft };
 }
 
 export function categorySpend(s, key, kind = 'expense') {

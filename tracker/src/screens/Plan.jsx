@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useStore, update, categorySpend, advance, runRecurring } from '../lib/store.js';
-import { thisMonth, shiftMonth, today, uid, money, amt, compact, dayLabel, clamp, buzz } from '../lib/util.js';
+import { thisMonth, shiftMonth, today, uid, amt, compact, dayLabel, clamp } from '../lib/util.js';
 import { CATS, icon } from '../lib/categories.js';
-import { Sheet, Segmented, MoneyField, Field, Empty, Icon, toast, confetti, Num } from '../ui.jsx';
+import { Sheet, Segmented, MoneyField, Field, Empty, Icon, toast } from '../ui.jsx';
 
 export default function Plan({ tab, setTab }) {
   return (
     <div className="screen">
       <header className="screen-head"><h1>Plan</h1></header>
-      <Segmented label="Plan section" value={tab} onChange={setTab} options={[['budgets', 'Budgets'], ['bills', 'Bills and pay'], ['goals', 'Goals']]} />
+      <Segmented label="Plan section" value={tab} onChange={setTab} options={[['budgets', 'Budgets'], ['bills', 'Bills and pay']]} />
       {tab === 'budgets' && <Budgets />}
       {tab === 'bills' && <Bills />}
-      {tab === 'goals' && <Goals />}
     </div>
   );
 }
@@ -182,115 +181,3 @@ function BillSheet({ r, onClose }) {
   );
 }
 
-// ── Goals ────────────────────────────────────────────────
-const GOAL_EMOJI = ['🎯', '🏠', '🚗', '✈️', '💍', '🎓', '🛟', '💻', '👶', '🏖️', '🎮', '🐶'];
-const GOAL_COLORS = ['#2438F0', '#FF5A45', '#13A877', '#FFB020', '#8B5CF6', '#EC4899'];
-
-function Goals() {
-  const s = useStore();
-  const [edit, setEdit] = useState(null);
-  const [fund, setFund] = useState(null);
-  const saved = s.goals.reduce((x, g) => x + g.saved, 0);
-  return (
-    <>
-      {s.goals.length > 0 && <p className="muted center">You've saved <b className="ink"><Num value={saved} /></b> across {s.goals.length} {s.goals.length === 1 ? 'goal' : 'goals'}.</p>}
-      {s.goals.length ? (
-        <div className="jar-grid">
-          {s.goals.map(g => <Jar key={g.id} g={g} onFund={() => setFund(g)} onEdit={() => setEdit(g)} />)}
-          <button className="jar add" onClick={() => setEdit({})}><Icon name="plus" size={28} /><b>New goal</b></button>
-        </div>
-      ) : (
-        <section className="card">
-          <Empty emoji="🫙" title="Save up for something" text="A trip, a car, a house deposit or an emergency fund. Fill the jar as you save and watch it rise."
-            action={<button className="btn primary" onClick={() => setEdit({})}><Icon name="plus" size={18} /> Create a goal</button>} />
-        </section>
-      )}
-      <GoalSheet g={edit} onClose={() => setEdit(null)} />
-      <FundSheet g={fund} onClose={() => setFund(null)} />
-    </>
-  );
-}
-
-function Jar({ g, onFund, onEdit }) {
-  const p = clamp(g.saved / g.target, 0, 1);
-  const done = g.saved >= g.target;
-  return (
-    <div className={'jar' + (done ? ' done' : '')} style={{ '--c': g.color }}>
-      <button className="jar-glass" onClick={onFund} aria-label={`${g.name}: ${money(g.saved)} of ${money(g.target)}. Add money`}>
-        <span className="jar-fill" style={{ height: `${p * 100}%` }}><svg className="wave" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 V20 H0Z" /></svg></span>
-        <span className="jar-emoji" aria-hidden="true">{done ? '🎉' : g.emoji}</span>
-        <span className="jar-pct">{Math.round(p * 100)}%</span>
-      </button>
-      <button className="jar-info" onClick={onEdit} aria-label={`Edit ${g.name}`}>
-        <b>{g.name}</b>
-        <small>{done ? 'Goal reached' : `${compact(g.target - g.saved)} to go`}</small>
-      </button>
-    </div>
-  );
-}
-
-function GoalSheet({ g, onClose }) {
-  const [f, setF] = useState({});
-  const s = useStore();
-  useEffect(() => { if (g) setF({ name: '', emoji: '🎯', target: '', saved: '', color: GOAL_COLORS[s.goals.length % GOAL_COLORS.length], ...g }); }, [g]); // eslint-disable-line
-  if (!g) return null;
-  const set = (k, v) => setF(o => ({ ...o, [k]: v }));
-  const ok = f.name?.trim() && parseFloat(f.target) > 0;
-  const save = () => {
-    if (!ok) return;
-    const item = { ...f, name: f.name.trim(), target: parseFloat(f.target), saved: parseFloat(f.saved) || 0 };
-    update(d => { if (g.id) Object.assign(d.goals.find(x => x.id === g.id), item); else d.goals.push({ ...item, id: uid() }); });
-    toast(g.id ? 'Goal updated' : `${item.name} goal created`);
-    onClose();
-  };
-  return (
-    <Sheet open onClose={onClose} title={g.id ? 'Edit goal' : 'New goal'}>
-      <div className="form">
-        <div className="emoji-pick" role="radiogroup" aria-label="Icon">
-          {GOAL_EMOJI.map(e => <button key={e} role="radio" aria-checked={f.emoji === e} className={f.emoji === e ? 'on' : ''} onClick={() => set('emoji', e)}>{e}</button>)}
-        </div>
-        <Field label="What are you saving for?"><input value={f.name || ''} onChange={e => set('name', e.target.value)} placeholder="e.g. Japan trip" data-autofocus /></Field>
-        <div className="grid-2 tight">
-          <MoneyField label="Goal amount" value={f.target} onChange={v => set('target', v)} />
-          <MoneyField label="Saved so far" value={f.saved} onChange={v => set('saved', v)} />
-        </div>
-        <div className="swatches" role="radiogroup" aria-label="Colour">
-          {GOAL_COLORS.map(c => <button key={c} role="radio" aria-checked={f.color === c} aria-label={c} className={f.color === c ? 'on' : ''} style={{ background: c }} onClick={() => set('color', c)} />)}
-        </div>
-        <div className="form-actions">
-          {g.id && <button className="btn ghost danger" onClick={() => { const copy = { ...g }; update(d => { d.goals = d.goals.filter(x => x.id !== g.id); }); toast('Goal deleted', () => update(d => { d.goals.push(copy); })); onClose(); }}>Delete goal</button>}
-          <button className="btn primary" disabled={!ok} onClick={save}>Save goal</button>
-        </div>
-      </div>
-    </Sheet>
-  );
-}
-
-function FundSheet({ g, onClose }) {
-  const [v, setV] = useState('');
-  useEffect(() => setV(''), [g]);
-  if (!g) return null;
-  const apply = sign => {
-    const n = parseFloat(v);
-    if (!(n > 0)) return;
-    const before = g.saved, after = Math.max(0, before + sign * n);
-    update(d => { d.goals.find(x => x.id === g.id).saved = after; });
-    buzz(15);
-    if (before < g.target && after >= g.target) { confetti(); toast(`You reached your ${g.name} goal! 🎉`); }
-    else toast(sign > 0 ? `Added ${amt(n)} to ${g.name}` : `Took ${amt(n)} out of ${g.name}`, () => update(d => { d.goals.find(x => x.id === g.id).saved = before; }));
-    onClose();
-  };
-  return (
-    <Sheet open onClose={onClose} title={`${g.emoji} ${g.name}`}>
-      <div className="form">
-        <p className="muted">{money(g.saved)} saved of {money(g.target)}</p>
-        <div className="chips tight">{[25, 50, 100, 250, 500].map(n => <button key={n} className={'chip' + (+v === n ? ' on' : '')} onClick={() => setV(String(n))}>+${n}</button>)}</div>
-        <MoneyField label="Amount" value={v} onChange={setV} autoFocus />
-        <div className="form-actions">
-          <button className="btn ghost" disabled={!(parseFloat(v) > 0)} onClick={() => apply(-1)}>Take money out</button>
-          <button className="btn primary" disabled={!(parseFloat(v) > 0)} onClick={() => apply(1)}>Add to goal</button>
-        </div>
-      </div>
-    </Sheet>
-  );
-}

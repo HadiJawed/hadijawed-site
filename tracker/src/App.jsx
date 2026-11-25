@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useStore, useStatus, update, runRecurring } from './lib/store.js';
 import { today, parse } from './lib/util.js';
 import { backupNow } from './lib/backup.js';
-import { Icon, Toasts, toast } from './ui.jsx';
+import { Icon, Toasts, toast, Sheet } from './ui.jsx';
+import Goals from './screens/Goals.jsx';
 import Home from './screens/Home.jsx';
 import Activity from './screens/Activity.jsx';
 import Plan from './screens/Plan.jsx';
@@ -10,11 +11,14 @@ import Wealth from './screens/Wealth.jsx';
 import Settings from './screens/Settings.jsx';
 import QuickAdd from './screens/QuickAdd.jsx';
 
-const TABS = [['home', 'Home', 'home'], ['activity', 'Activity', 'list'], ['plan', 'Plan', 'plan'], ['wealth', 'Wealth', 'wealth'], ['settings', 'Settings', 'gear']];
-const SUBTABS = { plan: ['budgets', 'bills', 'goals'], wealth: ['networth', 'room', 'tax', 'grow'] };
+const TABS = [['home', 'Home', 'home'], ['activity', 'Activity', 'list'], ['goals', 'Goals', 'target'], ['plan', 'Plan', 'plan'], ['wealth', 'Wealth', 'wealth'], ['settings', 'Settings', 'gear']];
+const SUBTABS = { plan: ['budgets', 'bills'], wealth: ['networth', 'room', 'tax', 'grow'] };
+const MORE = [['plan', 'budgets', '🎯', 'Budgets', 'Monthly limits'], ['plan', 'bills', '🔁', 'Bills and pay', 'Things that repeat'], ['wealth', 'networth', '📈', 'Net worth', 'Own minus owe'],
+  ['wealth', 'room', '🌱', 'TFSA and RRSP', 'Contribution room'], ['wealth', 'tax', '🧾', 'Tax', 'Take-home pay'], ['wealth', 'grow', '🚀', 'Grow', 'Compound growth'], ['settings', null, '⚙️', 'Settings', 'Backups, install']];
 
 function readHash() {
-  const [tab, sub] = location.hash.replace('#', '').split('/');
+  let [tab, sub] = location.hash.replace('#', '').split('/');
+  if (tab === 'plan' && sub === 'goals') tab = 'goals'; // old link
   return { tab: TABS.some(t => t[0] === tab) ? tab : 'home', sub };
 }
 
@@ -38,6 +42,7 @@ export default function App() {
   const [{ tab, sub }, setRoute] = useState(readHash);
   const [qa, setQa] = useState(null);
   const [actKind, setActKind] = useState(null);
+  const [more, setMore] = useState(false);
   const install = useInstall();
 
   const go = useCallback((t, subtab) => {
@@ -48,7 +53,7 @@ export default function App() {
     window.scrollTo({ top: 0 });
   }, []);
   useEffect(() => {
-    const h = () => setRoute(readHash());
+    const h = () => { setRoute(readHash()); setMore(false); };
     window.addEventListener('popstate', h);
     return () => window.removeEventListener('popstate', h);
   }, []);
@@ -93,21 +98,28 @@ export default function App() {
         {status.error && <div className="banner bad" role="alert">{status.error}</div>}
         {tab === 'home' && <Home go={go} add={add} edit={edit} nudges={nudges} />}
         {tab === 'activity' && <Activity edit={edit} add={add} initialKind={actKind} />}
+        {tab === 'goals' && <Goals />}
         {tab === 'plan' && <Plan tab={subOf('plan')} setTab={t => go('plan', t)} />}
         {tab === 'wealth' && <Wealth tab={subOf('wealth')} setTab={t => go('wealth', t)} />}
         {tab === 'settings' && <Settings install={install} />}
       </main>
 
       <nav className="bottom" aria-label="Main">
-        {TABS.filter(t => t[0] !== 'settings').slice(0, 2).map(([k, l, ic]) => (
+        {[TABS[0], TABS[1]].map(([k, l, ic]) => (
           <button key={k} className={tab === k ? 'on' : ''} aria-current={tab === k ? 'page' : undefined} onClick={() => go(k)}><Icon name={ic} /><span>{l}</span></button>
         ))}
         <button className="fab" onClick={() => add('expense')} aria-label="Add an entry"><Icon name="plus" size={30} /></button>
-        {[TABS[2], TABS[3]].map(([k, l, ic]) => (
-          <button key={k} className={tab === k ? 'on' : ''} aria-current={tab === k ? 'page' : undefined} onClick={() => go(k)}><Icon name={ic} /><span>{l}</span></button>
-        ))}
+        <button className={tab === 'goals' ? 'on' : ''} aria-current={tab === 'goals' ? 'page' : undefined} onClick={() => go('goals')}><Icon name="target" /><span>Goals</span></button>
+        <button className={['plan', 'wealth', 'settings'].includes(tab) ? 'on' : ''} onClick={() => setMore(true)} aria-haspopup="dialog"><Icon name="grid" /><span>More</span></button>
       </nav>
-      <button className="top-gear icon-btn" onClick={() => go('settings')} aria-label="Settings"><Icon name="gear" /></button>
+
+      <Sheet open={more} onClose={() => setMore(false)} title="More">
+        <div className="more-grid">
+          {MORE.map(([t, st, e, l, d]) => (
+            <button key={l} onClick={() => { setMore(false); go(t, st); }}><span aria-hidden="true">{e}</span>{l}<small>{d}</small></button>
+          ))}
+        </div>
+      </Sheet>
 
       <QuickAdd open={qa} onClose={() => setQa(null)} />
       <Toasts />
