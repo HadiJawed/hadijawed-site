@@ -3,7 +3,8 @@ import { useStore, update, replaceAll, emptyState } from '../lib/store.js';
 import { backupNow, restoreFromFile, exportCSV, autoBackupSupported, setupAutoBackup, autoBackupStatus, resumeAutoBackup, stopAutoBackup } from '../lib/backup.js';
 import { dayLabel, today } from '../lib/util.js';
 import { PROVINCES } from '../lib/tax.js';
-import { Field, Icon, toast, Sheet } from '../ui.jsx';
+import { Field, Icon, toast, Sheet, Segmented } from '../ui.jsx';
+import { applyTheme } from '../lib/theme.js';
 
 export default function Settings({ install }) {
   const s = useStore();
@@ -29,6 +30,11 @@ export default function Settings({ install }) {
             </select>
           </Field>
         </div>
+        <Field label="Appearance">
+          <Segmented label="Appearance" value={s.settings.theme === 'light' ? 'light' : 'dark'}
+            onChange={t => { update(d => { d.settings.theme = t; }); applyTheme(t); }}
+            options={[['dark', 'Dark'], ['light', 'Light']]} />
+        </Field>
       </section>
 
       <section className="card" id="backup">

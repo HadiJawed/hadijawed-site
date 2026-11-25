@@ -1,0 +1,182 @@
+/* ══ Dark premium theme (default) ═════════════════════════════
+   Deep navy ground, soft cobalt/coral glows, frosted glass for navigation
+   and sheets, translucent glass cards. Brand colours and Archivo are kept.
+   Choose Light in Settings to get the original light look back. */
+
+:root:not([data-theme=light]) {
+  color-scheme: dark;
+  --bg: #070A1A;
+  --card: #10132B;              /* solid: used for text on light chips/buttons */
+  --ink: #F2F3FF;
+  --soft: #9EA3CC;
+  --line: rgba(255,255,255,.09);
+  --track: rgba(255,255,255,.08);
+  --cobalt: #6F7DFF;
+  --cobalt-soft: rgba(111,125,255,.16);
+  --sun: #FFD23F;
+  --coral: #FF6F5E;
+  --coral-soft: rgba(255,111,94,.14);
+  --green: #34E0A1;
+  --green-soft: rgba(52,224,161,.13);
+  --amber: #FFB547;
+  --violet: #A78BFA;
+  --glass: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.03));
+  --glass-strong: rgba(18,21,46,.72);
+  --edge: rgba(255,255,255,.08);
+  --edge-hi: rgba(255,255,255,.14);
+  --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px -24px rgba(0,0,0,.8);
+  --spring: cubic-bezier(.34,1.36,.64,1);
+}
+
+/* Light, chosen in Settings: always light, even when the device is in dark mode */
+:root[data-theme=light] {
+  color-scheme: light;
+  --bg: #F4F5FF; --card: #FFFFFF; --ink: #17153B; --soft: #5B5980; --line: #E3E4F5; --track: #E9EAFB;
+  --cobalt: #2438F0; --cobalt-soft: #E8EBFF; --sun: #FFD23F; --coral: #F0442F; --coral-soft: #FFE9E6;
+  --green: #0E9C6D; --green-soft: #E1F7EF; --amber: #E08A00; --violet: #8B5CF6;
+  --shadow: 0 1px 2px rgba(23,21,59,.05), 0 10px 30px -10px rgba(23,21,59,.12);
+}
+
+/* ── Ground: fixed glows behind everything ── */
+:root:not([data-theme=light]) body { background: var(--bg); }
+:root:not([data-theme=light]) body::before {
+  content: ''; position: fixed; inset: -20vmax; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40vmax 40vmax at 12% 8%, rgba(76,92,255,.22), transparent 60%),
+    radial-gradient(34vmax 34vmax at 92% 18%, rgba(255,111,94,.12), transparent 60%),
+    radial-gradient(40vmax 40vmax at 70% 95%, rgba(167,139,250,.12), transparent 60%);
+}
+:root:not([data-theme=light]) .boot { background: transparent; }
+
+/* ── Glass surfaces ── */
+:root:not([data-theme=light]) :is(.card, .stat, .month-nav, .search, .banner) {
+  background: var(--glass);
+  box-shadow: var(--shadow), inset 0 0 0 1px var(--edge);
+}
+:root:not([data-theme=light]) .card.welcome { background: linear-gradient(135deg, rgba(111,125,255,.18), rgba(255,255,255,.03)); }
+:root:not([data-theme=light]) .banner { box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,210,63,.4); }
+:root:not([data-theme=light]) .banner.bad { box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,111,94,.5); }
+:root:not([data-theme=light]) .danger-zone { box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,111,94,.25); }
+:root:not([data-theme=light]) .search:focus-within { box-shadow: var(--shadow), inset 0 0 0 1.5px var(--cobalt); }
+
+/* Frosted navigation and sheets (real blur only where content scrolls behind) */
+:root:not([data-theme=light]) .side {
+  background: rgba(10,13,32,.6); border-right: 1px solid var(--edge);
+  backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+:root:not([data-theme=light]) .side-btn.on { background: var(--cobalt-soft); color: #C9CEFF; box-shadow: inset 0 0 0 1px rgba(111,125,255,.35); }
+:root:not([data-theme=light]) .side-btn:hover { background: rgba(255,255,255,.05); }
+:root:not([data-theme=light]) .bottom {
+  background: rgba(14,17,40,.7); box-shadow: 0 20px 50px -10px rgba(0,0,0,.7), inset 0 0 0 1px var(--edge-hi);
+  backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+:root:not([data-theme=light]) .bottom > button.on { color: #fff; }
+:root:not([data-theme=light]) .bottom > button.on svg { filter: drop-shadow(0 0 8px rgba(111,125,255,.9)); }
+:root:not([data-theme=light]) .scrim { background: rgba(3,4,14,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+:root:not([data-theme=light]) .sheet {
+  background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--edge-hi), 0 -20px 60px -20px rgba(0,0,0,.8);
+  backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+:root:not([data-theme=light]) .sheet-head { background: transparent; }
+:root:not([data-theme=light]) .grab { background: rgba(255,255,255,.2); }
+
+/* ── Hero: glowing gradient panel instead of the flat block ── */
+:root:not([data-theme=light]) .hero-card {
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(255,210,63,.28), transparent 45%),
+    linear-gradient(135deg, #3B4BFF 0%, #5A3FE0 55%, #2A1F8F 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 30px 80px -30px rgba(76,92,255,.9);
+}
+:root:not([data-theme=light]) .hero-card::after {
+  background: radial-gradient(circle, rgba(255,210,63,.55), transparent 65%);
+  border-radius: 50%; width: 280px; height: 280px; right: -90px; top: -120px; transform: none; opacity: .7; filter: blur(6px);
+}
+:root:not([data-theme=light]) .hero-card.t-neg { background: linear-gradient(135deg, #C2321F, #7A1631); box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 30px 80px -30px rgba(255,80,60,.8); }
+:root:not([data-theme=light]) .hero-card.t-low::after { background: radial-gradient(circle, rgba(255,181,71,.6), transparent 65%); }
+:root:not([data-theme=light]) .flow div { background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+:root:not([data-theme=light]) .hero-num { text-shadow: 0 8px 40px rgba(0,0,0,.25); }
+
+/* ── Buttons: glow instead of flat fill ── */
+:root:not([data-theme=light]) .btn.primary { background: linear-gradient(180deg, #7C89FF, #5563F5); color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.3) inset, 0 10px 30px -10px rgba(91,103,255,.9); }
+:root:not([data-theme=light]) .btn.primary:hover:not(:disabled) { filter: brightness(1.1); }
+:root:not([data-theme=light]) .btn.soft { background: var(--cobalt-soft); color: #C9CEFF; box-shadow: inset 0 0 0 1px rgba(111,125,255,.3); }
+:root:not([data-theme=light]) .btn.ghost { box-shadow: inset 0 0 0 1px var(--edge-hi); }
+:root:not([data-theme=light]) .btn.ghost:hover:not(:disabled) { background: rgba(255,255,255,.06); }
+:root:not([data-theme=light]) .btn.sun { box-shadow: 0 10px 30px -10px rgba(255,210,63,.7); }
+:root:not([data-theme=light]) .btn.k-income { background: linear-gradient(180deg, #46E8AE, #1FB883); color: #04241A; }
+:root:not([data-theme=light]) .btn.k-expense { background: linear-gradient(180deg, #FFFFFF, #DADCF5); color: #10132B; }
+:root:not([data-theme=light]) .btn.danger-solid { box-shadow: 0 10px 30px -10px rgba(255,111,94,.8); }
+:root:not([data-theme=light]) .fab { background: linear-gradient(180deg, #7C89FF, #4D5BF2); box-shadow: 0 0 0 1px rgba(255,255,255,.2) inset, 0 12px 34px -6px rgba(91,103,255,.95); }
+:root:not([data-theme=light]) .add-side { background: linear-gradient(180deg, #7C89FF, #5563F5); }
+:root:not([data-theme=light]) :is(.link, a) { color: #A9B2FF; }
+
+/* ── Controls ── */
+:root:not([data-theme=light]) .chip { background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px var(--edge); }
+:root:not([data-theme=light]) :is(.card, .sheet) .chip { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px var(--edge); }
+:root:not([data-theme=light]) :is(.chip.on, .card .chip.on, .sheet .chip.on) { background: #F2F3FF; color: #10132B; box-shadow: 0 6px 20px -8px rgba(255,255,255,.5); }
+:root:not([data-theme=light]) .seg { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px var(--edge); }
+:root:not([data-theme=light]) .seg button.on { background: rgba(255,255,255,.14); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 4px 14px rgba(0,0,0,.35); }
+:root:not([data-theme=light]) :is(.field input, .field select, .note, .money-in, .date-input) { background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px var(--edge-hi); }
+:root:not([data-theme=light]) .field .money-in input { background: none; box-shadow: none; }
+:root:not([data-theme=light]) :is(.field input:focus, .field select:focus, .note:focus, .money-in:focus-within) { box-shadow: inset 0 0 0 1.5px var(--cobalt), 0 0 0 4px rgba(111,125,255,.18); }
+:root:not([data-theme=light]) .field select option { background: #10132B; }
+:root:not([data-theme=light]) .keypad button { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px var(--edge); }
+:root:not([data-theme=light]) .keypad button:active { background: rgba(255,255,255,.14); }
+:root:not([data-theme=light]) .sw { background: rgba(255,255,255,.14); }
+:root:not([data-theme=light]) .toggle input:checked + .sw { background: var(--cobalt); box-shadow: 0 0 16px rgba(111,125,255,.6); }
+:root:not([data-theme=light]) input[type=range]::-webkit-slider-thumb { background: #fff; border-color: var(--cobalt); box-shadow: 0 0 0 6px rgba(111,125,255,.2), 0 4px 12px rgba(0,0,0,.5); }
+
+/* ── Inner tiles that sat on light grey ── */
+:root:not([data-theme=light]) :is(.mini-stats div, .goal-facts div, .plan-rows div, .sub-card, .bill, .ins, .cut-list li, .more-grid button, .empty-emoji, .emoji-pick button, .checklist button) {
+  background: rgba(255,255,255,.045); box-shadow: inset 0 0 0 1px var(--edge);
+}
+:root:not([data-theme=light]) .emoji-pick button.on { background: var(--cobalt-soft); box-shadow: inset 0 0 0 2px var(--cobalt); }
+:root:not([data-theme=light]) .bill-ico { background: rgba(255,255,255,.07); }
+:root:not([data-theme=light]) .ins.t-good { background: rgba(52,224,161,.1); box-shadow: inset 0 0 0 1px rgba(52,224,161,.22); }
+:root:not([data-theme=light]) .ins.t-warn { background: rgba(255,210,63,.09); box-shadow: inset 0 0 0 1px rgba(255,210,63,.22); }
+:root:not([data-theme=light]) .ins:hover { box-shadow: inset 0 0 0 1px var(--edge-hi); }
+:root:not([data-theme=light]) .tx { background: transparent; }
+:root:not([data-theme=light]) :is(.tx-main:hover, .budget:hover, .ring-item:hover, .mini-goals button:hover, .legend button:hover, .legend button.on, .done-list button:hover, .bar-col:hover, .bar-col.on) { background: rgba(255,255,255,.05); }
+:root:not([data-theme=light]) .tx-ico { background: rgba(255,111,94,.14); }
+:root:not([data-theme=light]) .tx-ico.k-income { background: rgba(52,224,161,.13); }
+:root:not([data-theme=light]) .tx-ico.k-invest { background: rgba(111,125,255,.16); }
+:root:not([data-theme=light]) .pill { background: rgba(255,255,255,.08); }
+:root:not([data-theme=light]) .pill.good { background: rgba(52,224,161,.14); color: var(--green); }
+:root:not([data-theme=light]) .pill.bad { background: rgba(255,111,94,.15); color: var(--coral); }
+:root:not([data-theme=light]) .pill.warn { background: rgba(255,210,63,.14); color: var(--sun); }
+:root:not([data-theme=light]) .done .tick { background: var(--green); color: #04241A; }
+:root:not([data-theme=light]) .preview-box { background: var(--cobalt-soft); box-shadow: inset 0 0 0 1px rgba(111,125,255,.3); }
+:root:not([data-theme=light]) .freed { background: rgba(255,111,94,.12); box-shadow: inset 0 0 0 1px rgba(255,111,94,.25); }
+:root:not([data-theme=light]) .freed.ok { background: rgba(52,224,161,.1); box-shadow: inset 0 0 0 1px rgba(52,224,161,.25); }
+:root:not([data-theme=light]) .freed-bar { background: rgba(255,255,255,.1); }
+:root:not([data-theme=light]) .toast { background: rgba(242,243,255,.96); color: #10132B; }
+:root:not([data-theme=light]) .toast button { color: #4D5BF2; }
+
+/* ── Charts and progress: glow on the data ── */
+:root:not([data-theme=light]) :is(.bar i, .bigbar i) { box-shadow: 0 0 14px -2px rgba(111,125,255,.8); }
+:root:not([data-theme=light]) :is(.goal-bar i, .mg-bar i) { box-shadow: 0 0 14px -2px var(--c); }
+:root:not([data-theme=light]) .ring-arc { filter: drop-shadow(0 0 6px rgba(111,125,255,.55)); }
+:root:not([data-theme=light]) .dash-pace svg path.draw { filter: drop-shadow(0 0 8px rgba(111,125,255,.8)); }
+:root:not([data-theme=light]) .pace-dot { box-shadow: 0 0 0 4px #10132B, 0 0 24px 6px rgba(111,125,255,.7); }
+:root:not([data-theme=light]) .cal-d { background: color-mix(in srgb, #6F7DFF calc(var(--l) * 100%), rgba(255,255,255,.05)); }
+:root:not([data-theme=light]) .cal-d.hot { box-shadow: 0 0 12px -2px rgba(111,125,255,.8); }
+:root:not([data-theme=light]) .cal-d.today { box-shadow: 0 0 0 2px var(--sun), 0 0 14px rgba(255,210,63,.5); }
+:root:not([data-theme=light]) .cal-d.on { box-shadow: 0 0 0 2px #fff; }
+:root:not([data-theme=light]) :is(.goal-jar, .jar-glass) { background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c) 45%, transparent), 0 0 30px -10px var(--c); }
+:root:not([data-theme=light]) .mg-emoji { background: color-mix(in srgb, var(--c) 22%, transparent); }
+:root:not([data-theme=light]) .goal-tip { background: color-mix(in srgb, var(--c) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent); }
+:root:not([data-theme=light]) .years td { border-top-color: var(--edge); }
+:root:not([data-theme=light]) .pace-tip { background: #F2F3FF; color: #10132B; }
+
+/* ══ Polish from the design-skill checklist (both themes) ══════ */
+h1, h2, h3, .hero-label { text-wrap: balance; }
+p, .hero-sub, .ins span, .goal-tip, .empty p { text-wrap: pretty; }
+:is(.hero-num, .stat b, .nw-num, .goal-amt b, .tx-amt, .bill-amt, .mini-stats b, .plan-rows b, .freed b) { font-variant-numeric: tabular-nums; }
+:is(.btn, .chip, .fab, .keypad button, .icon-btn, .seg button, .side-btn, .stat, .ins) {
+  transition-property: transform, background-color, box-shadow, color, filter;
+  transition-duration: 180ms; transition-timing-function: var(--spring, ease-out);
+}
+:is(.btn:active:not(:disabled), .chip:active, .keypad button:active, button.stat:active, .ins:active) { transform: scale(.96); }
+@media (pointer: coarse) { .chip { min-height: 44px; } .link { padding: 10px 4px; } }
+:is(button:not(:disabled), label.chip) { cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { :root:not([data-theme=light]) .ring-arc, :root:not([data-theme=light]) .dash-pace svg path.draw { filter: none; } }
